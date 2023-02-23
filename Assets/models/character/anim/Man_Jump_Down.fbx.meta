@@ -39,7 +39,7 @@ ModelImporter:
       name: Man_JumpLand
       takeName: CINEMA_4D_Main
       internalID: 0
-      firstFrame: 0
+      firstFrame: 5.9
       lastFrame: 35
       wrapMode: 0
       orientationOffsetY: 0
