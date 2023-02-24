@@ -1,4 +1,5 @@
-﻿ using UnityEngine;
+﻿using Lean.Touch;
+using UnityEngine;
 #if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
 #endif
@@ -192,25 +193,35 @@ namespace StarterAssets
             }
         }
 
+        //private void OnEnable()
+        //{
+        //    LeanTouch.OnFingerUpdate += LeanTouch_OnFingerDown;
+        //}
+
+        //private void OnDisable()
+        //{
+        //    LeanTouch.OnFingerUpdate -= LeanTouch_OnFingerDown;
+        //}
+
+        private void LeanTouch_OnFingerDown(LeanFinger obj)
+        {
+            if (LeanTouch.Fingers.Count <= 0 || obj.IsOverGui) return;
+
+            
+        }
+
         private void CameraRotation()
         {
-            // if there is an input and camera position is not fixed
-            if (_input.look.sqrMagnitude >= _threshold && !LockCameraPosition)
-            {
-                //Don't multiply mouse input by Time.deltaTime;
-                float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
+            float XaxisRotation = _input.look.x;
+            float YaxisRotation = _input.look.y;
+            Vector3 euler = new Vector3(-YaxisRotation, 0, 0);
+            CinemachineCameraTarget.transform.eulerAngles += euler;
 
-                _cinemachineTargetYaw += _input.look.x * deltaTimeMultiplier;
-                _cinemachineTargetPitch += _input.look.y * deltaTimeMultiplier;
-            }
-
-            // clamp our rotations so our values are limited 360 degrees
-            _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
-            _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
-
-            // Cinemachine will follow this target
-            CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
-                _cinemachineTargetYaw, 0.0f);
+            float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y,
+                transform.eulerAngles.y + XaxisRotation * 10f,
+                ref _rotationVelocity,
+                RotationSmoothTime);
+            transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
         }
 
         private void Move()
@@ -252,20 +263,22 @@ namespace StarterAssets
 
             // normalise input direction
             Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;
-
-            // note: Vector2's != operator uses approximation so is not floating point error prone, and is cheaper than magnitude
-            // if there is a move input rotate player when the player is moving
-            if (_input.move != Vector2.zero)
-            {
-                _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
+            _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
                                   _mainCamera.transform.eulerAngles.y;
-                float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity,
-                    RotationSmoothTime);
+            //note: Vector2's != operator uses approximation so is not floating point error prone, and is cheaper than magnitude
+            //if there is a move input rotate player when the player is moving
+            //if (_input.look != Vector2.zero)
+            //{
 
-                // rotate to face input direction relative to camera position
-                transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
-            }
+            //float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y,
+            //    CinemachineCameraTarget.transform.eulerAngles.y, 
+            //    ref _rotationVelocity,
+            //    RotationSmoothTime);
+            //transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
 
+            //    // rotate to face input direction relative to camera position
+            //    //transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+            //}
 
             Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
 

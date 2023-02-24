@@ -131,6 +131,7 @@ Library: lib_burst_generated
 --compilation-defines=ENABLE_BURST_1_0_0_OR_NEWER
 --compilation-defines=USING_ANIMATION_MODULE
 --compilation-defines=USING_PHYSICS2D_MODULE
+--compilation-defines=__INPUTSYSTEM__
 --compilation-defines=PACKAGE_INPUT_SYSTEM_EXISTS
 --compilation-defines=PACKAGE_INPUT_SYSTEM_1_2_0_OR_NEWER_EXISTS
 --compilation-defines=MODULE_AI_EXISTS
@@ -156,6 +157,7 @@ Library: lib_burst_generated
 --root-assembly=G:\Projects\void-island\Temp\StagingArea\Data\Managed\Unity.InputSystem.dll
 --root-assembly=G:\Projects\void-island\Temp\StagingArea\Data\Managed\Unity.VisualScripting.State.dll
 --root-assembly=G:\Projects\void-island\Temp\StagingArea\Data\Managed\Unity.RenderPipelines.Universal.Runtime.dll
+--root-assembly=G:\Projects\void-island\Temp\StagingArea\Data\Managed\CW.Common.dll
 --root-assembly=G:\Projects\void-island\Temp\StagingArea\Data\Managed\Unity.VisualScripting.Flow.dll
 --root-assembly=G:\Projects\void-island\Temp\StagingArea\Data\Managed\Unity.VisualScripting.Core.dll
 --root-assembly=G:\Projects\void-island\Temp\StagingArea\Data\Managed\Unity.Services.Core.Environments.Internal.dll
@@ -168,9 +170,11 @@ Library: lib_burst_generated
 --root-assembly=G:\Projects\void-island\Temp\StagingArea\Data\Managed\Unity.Timeline.dll
 --root-assembly=G:\Projects\void-island\Temp\StagingArea\Data\Managed\Unity.Mathematics.dll
 --root-assembly=G:\Projects\void-island\Temp\StagingArea\Data\Managed\Unity.Services.Core.Scheduler.dll
+--root-assembly=G:\Projects\void-island\Temp\StagingArea\Data\Managed\LeanTouch.dll
 --root-assembly=G:\Projects\void-island\Temp\StagingArea\Data\Managed\Unity.Services.Core.Device.dll
 --root-assembly=G:\Projects\void-island\Temp\StagingArea\Data\Managed\Unity.Services.Core.Analytics.dll
 --root-assembly=G:\Projects\void-island\Temp\StagingArea\Data\Managed\Unity.Recorder.dll
+--root-assembly=G:\Projects\void-island\Temp\StagingArea\Data\Managed\LeanCommon.dll
 --root-assembly=G:\Projects\void-island\Temp\StagingArea\Data\Managed\Unity.Services.Core.Threading.dll
 --root-assembly=G:\Projects\void-island\Temp\StagingArea\Data\Managed\Unity.Services.Core.Configuration.dll
 --root-assembly=G:\Projects\void-island\Temp\StagingArea\Data\Managed\Unity.Services.Core.dll

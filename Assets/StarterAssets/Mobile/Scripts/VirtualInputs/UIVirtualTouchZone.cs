@@ -58,7 +58,9 @@ public class UIVirtualTouchZone : MonoBehaviour, IPointerDownHandler, IDragHandl
 
         Vector2 clampedPosition = ClampValuesToMagnitude(positionDelta);
         
-        Vector2 outputPosition = ApplyInversionFilter(clampedPosition);
+        Vector2 outputPosition = new Vector2(Input.GetAxis("Mouse X") * 0.4f, Input.GetAxis("Mouse Y") * 0.4f);
+        //Vector2 outputPosition = ApplyInversionFilter(clampedPosition);
+
 
         OutputPointerEventValue(outputPosition * magnitudeMultiplier);
     }
