@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-    private Joystick joystick;
+    //private Joystick joystick;
     private Rigidbody rb;
     private Animator anim;
     private GameObject _mainCamera;
     private Vector2 inputVector;
     private Vector2 look;
+    private Vector2 move;
 
     public Vector2 horizontalLimits;
     public Vector2 verticalLimits;
@@ -45,7 +46,7 @@ public class PlayerMove : MonoBehaviour
 
     private void Awake()
     {
-        joystick = FindObjectOfType<Joystick>();
+        //joystick = FindObjectOfType<Joystick>();
         rb = GetComponent<Rigidbody>();
         anim = GetComponentInChildren<Animator>();
         if (_mainCamera == null)
@@ -124,8 +125,8 @@ public class PlayerMove : MonoBehaviour
     private void Move()
     {
         inputVector = new Vector2(
-            Mathf.Clamp(joystick.Horizontal, horizontalLimits.x, horizontalLimits.y),
-            Mathf.Clamp(joystick.Vertical, verticalLimits.x, verticalLimits.y)
+            Mathf.Clamp(move.x, horizontalLimits.x, horizontalLimits.y),
+            Mathf.Clamp(move.y, verticalLimits.x, verticalLimits.y)
             );
 
         Vector3 moveVector = new Vector3(inputVector.x, 0, inputVector.y);
@@ -138,9 +139,9 @@ public class PlayerMove : MonoBehaviour
             rb.velocity.y,
             targetDirection.z * speed);
 
-        anim.SetFloat(_animIDRight, joystick.Horizontal);
-        anim.SetFloat(_animIDForward, joystick.Vertical);
-        anim.SetFloat(_animIDMotionSpeed, joystick.Direction.magnitude);
+        anim.SetFloat(_animIDRight, move.x);
+        anim.SetFloat(_animIDForward, move.y);
+        anim.SetFloat(_animIDMotionSpeed, new Vector2(move.x, move.y).magnitude);
     }
 
     private void CameraRotation()
@@ -160,6 +161,11 @@ public class PlayerMove : MonoBehaviour
     public void VirtualLookInput(Vector2 virtualLookDirection)
     {
         look = virtualLookDirection;
+    }
+
+    public void VirtualMoveInput(Vector2 virtualMoveDirection)
+    {
+        move = virtualMoveDirection;
     }
 
     public void VirtualJumpInput()

@@ -70,7 +70,7 @@ public class UIVirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandle
 
     private void OutputPointerEventValue(Vector2 pointerPosition)
     {
-        joystickOutputEvent.Invoke(pointerPosition);
+        joystickOutputEvent.Invoke(ClampValuesToMagnitude(pointerPosition));
     }
 
     private void UpdateHandleRectPosition(Vector2 newPosition)

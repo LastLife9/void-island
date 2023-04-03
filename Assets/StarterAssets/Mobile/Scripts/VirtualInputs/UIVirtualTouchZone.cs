@@ -39,7 +39,6 @@ public class UIVirtualTouchZone : MonoBehaviour, IPointerDownHandler, IDragHandl
 
     public void OnPointerDown(PointerEventData eventData)
     {
-
         RectTransformUtility.ScreenPointToLocalPointInRectangle(containerRect, eventData.position, eventData.pressEventCamera, out pointerDownPosition);
 
         if(handleRect)
@@ -51,16 +50,15 @@ public class UIVirtualTouchZone : MonoBehaviour, IPointerDownHandler, IDragHandl
 
     public void OnDrag(PointerEventData eventData)
     {
-
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(containerRect, eventData.position, eventData.pressEventCamera, out currentPointerPosition);
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(containerRect, 
+            eventData.position, eventData.pressEventCamera, out currentPointerPosition);
         
         Vector2 positionDelta = GetDeltaBetweenPositions(pointerDownPosition, currentPointerPosition);
-
         Vector2 clampedPosition = ClampValuesToMagnitude(positionDelta);
-        
-        Vector2 outputPosition = new Vector2(Input.GetAxis("Mouse X") * 0.4f, Input.GetAxis("Mouse Y") * 0.4f);
-        //Vector2 outputPosition = ApplyInversionFilter(clampedPosition);
+        Vector2 outputPosition = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
 
+        //Vector2 outputPosition = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+        //Vector2 outputPosition = ApplyInversionFilter(clampedPosition);
 
         OutputPointerEventValue(outputPosition * magnitudeMultiplier);
     }
@@ -77,6 +75,13 @@ public class UIVirtualTouchZone : MonoBehaviour, IPointerDownHandler, IDragHandl
             SetObjectActiveState(handleRect.gameObject, false);
             UpdateHandleRectPosition(Vector2.zero);
         }
+    }
+
+    Vector2 ApplySizeDelta(Vector2 position)
+    {
+        float x = (position.x / containerRect.sizeDelta.x) * 2.5f;
+        float y = (position.y / containerRect.sizeDelta.y) * 2.5f;
+        return new Vector2(x, y);
     }
 
     void OutputPointerEventValue(Vector2 pointerPosition)
