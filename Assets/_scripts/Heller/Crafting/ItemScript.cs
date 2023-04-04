@@ -8,7 +8,6 @@ public class ItemScript
     //public Dictionary<string, int> stats = new Dictionary<string, int>();
     public ItemScript(Item item)
     {
-        this.id = item.id;
         this.name = item.name;
         this.icon = item.icon;
         if (PlayerPrefs.HasKey(name + "Count"))

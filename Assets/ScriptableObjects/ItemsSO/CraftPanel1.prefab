@@ -176,7 +176,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 16
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -956,11 +956,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf37f1461683e9f46b0fad399fe05ade, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  requiredItems:
-  - {fileID: 11400000, guid: 94f0120b179718842bdc73a6cee25785, type: 2}
-  - {fileID: 11400000, guid: 864cf426c16de524c94f22dadc5cf3c4, type: 2}
-  - {fileID: 11400000, guid: 7ba633fe9a11122449ea7dbde15cf1ff, type: 2}
-  - {fileID: 11400000, guid: 9facb02973db9354695f95136732c6eb, type: 2}
   itemImages:
   - {fileID: 6794178002804204784}
   - {fileID: 6794178002443179622}
@@ -971,13 +966,11 @@ MonoBehaviour:
   - {fileID: 6794178002775619825}
   - {fileID: 6794178001736350913}
   - {fileID: 6794178001651601895}
+  sliderText: {fileID: 6794178000966755219}
   itemToCraftImage: {fileID: 6794178002693438500}
   slider: {fileID: 6794178000799445324}
   craftButton: {fileID: 6794178002618549278}
-  timeToCraft: 1
-  requiredItemsCount: 02000000030000000400000005000000
-  itemToCraftCount: 1
-  itemToCraft: {fileID: 0}
+  recipes: {fileID: 11400000, guid: 7cf15dc56ae21494eab47f0b75d3d0bf, type: 2}
 --- !u!1 &6794178002411690801
 GameObject:
   m_ObjectHideFlags: 0
@@ -1210,7 +1203,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -60, y: -247}
+  m_AnchoredPosition: {x: -6, y: -247}
   m_SizeDelta: {x: 506, y: 218}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6794178002618549276
