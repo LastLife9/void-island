@@ -25,6 +25,7 @@ public class UIVirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandle
         SetupHandle();
     }
 
+
     private void SetupHandle()
     {
         if(handleRect)
@@ -40,18 +41,17 @@ public class UIVirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandle
 
     public void OnDrag(PointerEventData eventData)
     {
-
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(containerRect, eventData.position, eventData.pressEventCamera, out Vector2 position);
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            containerRect, eventData.position, eventData.pressEventCamera, out Vector2 position);
         
         position = ApplySizeDelta(position);
-        
-        Vector2 clampedPosition = ClampValuesToMagnitude(position);
 
+        Vector2 clampedPosition = ClampValuesToMagnitude(position);
         Vector2 outputPosition = ApplyInversionFilter(position);
 
         OutputPointerEventValue(outputPosition * magnitudeMultiplier);
 
-        if(handleRect)
+        if (handleRect)
         {
             UpdateHandleRectPosition(clampedPosition * joystickRange);
         }

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
+using Lean.Touch;
 
 public class UIVirtualTouchZone : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
@@ -24,9 +25,61 @@ public class UIVirtualTouchZone : MonoBehaviour, IPointerDownHandler, IDragHandl
     [Header("Output")]
     public Event touchZoneOutputEvent;
 
+    bool isDrag = false;
+    Vector2 outputPosition;
+
     void Start()
     {
         SetupHandle();
+    }
+
+    //private void OnEnable()
+    //{
+    //    LeanTouch.OnFingerDown += HandleFingerDown;
+    //    LeanTouch.OnFingerUpdate += HandleFingerUpdate;
+    //    LeanTouch.OnFingerUp += HandleFingerUp;
+    //}
+
+    //private void OnDisable()
+    //{
+    //    LeanTouch.OnFingerDown -= HandleFingerDown;
+    //    LeanTouch.OnFingerUpdate -= HandleFingerUpdate;
+    //    LeanTouch.OnFingerUp -= HandleFingerUp;
+    //}
+
+    public void HandleFingerDown(LeanFinger finger)
+    {
+        if (!finger.IsOverGui && finger.ScreenPosition.x > Screen.width / 2f) return;
+
+        if (handleRect)
+        {
+            SetObjectActiveState(handleRect.gameObject, true);
+            UpdateHandleRectPosition(pointerDownPosition);
+        }
+    }
+
+    public void HandleFingerUpdate(LeanFinger finger)
+    {
+        if (!finger.IsOverGui && finger.ScreenPosition.x > Screen.width / 2f) return;
+        Debug.Log(finger.ScreenDelta);
+        Vector2 outputPosition = new Vector2(finger.ScreenDelta.x, finger.ScreenDelta.y);
+        OutputPointerEventValue(outputPosition * magnitudeMultiplier);
+    }
+
+    public void HandleFingerUp(LeanFinger finger)
+    {
+        if (!finger.IsOverGui && finger.ScreenPosition.x > Screen.width / 2f) return;
+
+        pointerDownPosition = Vector2.zero;
+        currentPointerPosition = Vector2.zero;
+
+        OutputPointerEventValue(Vector2.zero);
+
+        if (handleRect)
+        {
+            SetObjectActiveState(handleRect.gameObject, false);
+            UpdateHandleRectPosition(Vector2.zero);
+        }
     }
 
     private void SetupHandle()
@@ -39,26 +92,35 @@ public class UIVirtualTouchZone : MonoBehaviour, IPointerDownHandler, IDragHandl
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(containerRect, eventData.position, eventData.pressEventCamera, out pointerDownPosition);
+        outputPosition = Vector2.zero;
 
-        if(handleRect)
+        if (handleRect)
         {
             SetObjectActiveState(handleRect.gameObject, true);
             UpdateHandleRectPosition(pointerDownPosition);
         }
+
+
+        isDrag = true;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(containerRect, 
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(containerRect,
             eventData.position, eventData.pressEventCamera, out currentPointerPosition);
-        
-        Vector2 positionDelta = GetDeltaBetweenPositions(pointerDownPosition, currentPointerPosition);
-        Vector2 clampedPosition = ClampValuesToMagnitude(positionDelta);
-        Vector2 outputPosition = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
 
-        //Vector2 outputPosition = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+        Vector2 positionDelta = GetDeltaBetweenPositions(pointerDownPosition, currentPointerPosition);
+        //Vector2 clampedPosition = ClampValuesToMagnitude(positionDelta);
+        outputPosition = new Vector2(eventData.delta.x, eventData.delta.y);
+        Debug.Log(positionDelta);
         //Vector2 outputPosition = ApplyInversionFilter(clampedPosition);
+
+        isDrag = true;
+    }
+
+    private void Update()
+    {
+        if (!isDrag) return;
 
         OutputPointerEventValue(outputPosition * magnitudeMultiplier);
     }
@@ -67,14 +129,17 @@ public class UIVirtualTouchZone : MonoBehaviour, IPointerDownHandler, IDragHandl
     {
         pointerDownPosition = Vector2.zero;
         currentPointerPosition = Vector2.zero;
+        outputPosition = Vector2.zero;
 
         OutputPointerEventValue(Vector2.zero);
 
-        if(handleRect)
+        if (handleRect)
         {
             SetObjectActiveState(handleRect.gameObject, false);
             UpdateHandleRectPosition(Vector2.zero);
         }
+        isDrag = false;
+
     }
 
     Vector2 ApplySizeDelta(Vector2 position)
