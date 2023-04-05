@@ -49,10 +49,7 @@ public class PlayerMove : MonoBehaviour
         //joystick = FindObjectOfType<Joystick>();
         rb = GetComponent<Rigidbody>();
         anim = GetComponentInChildren<Animator>();
-        if (_mainCamera == null)
-        {
-            _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
-        }
+        _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
     }
 
     private void Start()
@@ -148,8 +145,9 @@ public class PlayerMove : MonoBehaviour
     {
         float XaxisRotation = look.x;
         float YaxisRotation = look.y;
-        Vector3 euler = new Vector3(-YaxisRotation, 0, 0);
-        CinemachineCameraTarget.transform.eulerAngles += euler;
+        Vector3 euler = CinemachineCameraTarget.transform.eulerAngles + new Vector3(-YaxisRotation, 0, 0);
+        euler = new Vector3(Mathf.Clamp(euler.x, BottomClamp, TopClamp), euler.y, euler.z);
+        CinemachineCameraTarget.transform.eulerAngles = euler;
 
         float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y,
             transform.eulerAngles.y + XaxisRotation * 10f,
