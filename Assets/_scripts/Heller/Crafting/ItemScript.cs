@@ -8,8 +8,8 @@ public class ItemScript
     //public Dictionary<string, int> stats = new Dictionary<string, int>();
     public ItemScript(Item item)
     {
-        this.name = item.name;
-        this.icon = item.icon;
+        name = item.name;
+        icon = item.icon;
         if (PlayerPrefs.HasKey(name + "Count"))
         {
             count = PlayerPrefs.GetInt(name + "Count");
@@ -17,9 +17,24 @@ public class ItemScript
         }
         count = 0;
     }
+    public ItemScript()
+    {
+        name = "";
+        icon = null;
+    }
     public void ChangeItemCount(int newCount = 0)
     {
         count += newCount;
         PlayerPrefs.SetInt(name + "Count", count);
+    }
+    public virtual void Use()
+    {
+        // Use the item
+        // Something might happen
+        Debug.Log("Using " + name);
+    }
+    public void RemoveFromInventory()
+    {
+        Inventory.instance.Remove(this);
     }
 }

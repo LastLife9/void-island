@@ -78,7 +78,7 @@ public class CraftRecipe : MonoBehaviour
             slider.fillAmount += .01f;
             yield return new WaitForSeconds(timeToCraft/100);
         }
-        ItemsManager.instance.GiveItem(itemToCraft.name, itemToCraftCount);
+        ItemsManager.instance.TakeItem(itemToCraft.name, itemToCraftCount);
         slider.fillAmount = 0;
     }
 }

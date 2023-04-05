@@ -4,7 +4,7 @@ public class EquipmentManager : MonoBehaviour
 {
 	#region Singleton
 	public enum MeshBlendShape { Torso, Arms, Legs };
-	public Equipment[] defaultEquipment;
+	public EquipmentScript[] defaultEquipment;
 	public static EquipmentManager instance;
 	//public SkinnedMeshRenderer targetMesh;
 	//SkinnedMeshRenderer[] currentMeshes;
@@ -13,9 +13,9 @@ public class EquipmentManager : MonoBehaviour
 		instance = this;
 	}
 	#endregion
-	Equipment[] currentEquipment;   // Items we currently have equipped
+	EquipmentScript[] currentEquipment;   // Items we currently have equipped
 	// Callback for when an item is equipped/unequipped
-	public delegate void OnEquipmentChanged(Equipment newItem, Equipment oldItem);
+	public delegate void OnEquipmentChanged(EquipmentScript newItem, EquipmentScript oldItem);
 	public OnEquipmentChanged onEquipmentChanged;
 	Inventory inventory;    // Reference to our inventory
 	void Start()
@@ -23,16 +23,16 @@ public class EquipmentManager : MonoBehaviour
 		inventory = Inventory.instance;     // Get a reference to our inventory
 		// Initialize currentEquipment based on number of equipment slots
 		int numSlots = System.Enum.GetNames(typeof(EquipmentSlot)).Length;
-		currentEquipment = new Equipment[numSlots];
+		currentEquipment = new EquipmentScript[numSlots];
 		//currentMeshes = new SkinnedMeshRenderer[numSlots];
-		EquipDefaults();
+		//EquipDefaults();
 	}
 	// Equip a new item
-	public void Equip(Equipment newItem)
+	public void Equip(EquipmentScript newItem)
 	{
 		// Find out what slot the item fits in
 		int slotIndex = (int)newItem.equipSlot;
-		Equipment oldItem = Unequip(slotIndex);
+		EquipmentScript oldItem = Unequip(slotIndex);
 		// An item has been equipped so we trigger the callback
 		onEquipmentChanged?.Invoke(newItem, oldItem);
 		// Insert the item into the slot
@@ -40,9 +40,9 @@ public class EquipmentManager : MonoBehaviour
 		//AttachToMesh(newItem, slotIndex);
 	}
 	// Unequip an item with a particular index
-	public Equipment Unequip(int slotIndex)
+	public EquipmentScript Unequip(int slotIndex)
 	{
-		Equipment oldItem = null;
+		EquipmentScript oldItem = null;
 		// Only do this if an item is there
 		if (currentEquipment[slotIndex] != null)
 		{
@@ -57,7 +57,7 @@ public class EquipmentManager : MonoBehaviour
 			//}
 			// Remove the item from the equipment array
 			currentEquipment[slotIndex] = null;
-			// Equipment has been removed so we trigger the callback
+			// EquipmentScript has been removed so we trigger the callback
 			onEquipmentChanged?.Invoke(null, oldItem);
 		}
 		return oldItem;
@@ -69,10 +69,10 @@ public class EquipmentManager : MonoBehaviour
 		{
 			Unequip(i);
 		}
-		EquipDefaults();
+		//EquipDefaults();
 	}
 	/*
-	void AttachToMesh(Equipment item, int slotIndex)
+	void AttachToMesh(EquipmentScript item, int slotIndex)
 	{
 		SkinnedMeshRenderer newMesh = Instantiate(item.mesh) as SkinnedMeshRenderer;
 		newMesh.transform.parent = targetMesh.transform.parent;
@@ -81,7 +81,7 @@ public class EquipmentManager : MonoBehaviour
 		currentMeshes[slotIndex] = newMesh;
 		SetBlendShapeWeight(item, 100);
 	}
-	void SetBlendShapeWeight(Equipment item, int weight)
+	void SetBlendShapeWeight(EquipmentScript item, int weight)
 	{
 		foreach (MeshBlendShape blendshape in item.coveredMeshRegions)
 		{
@@ -90,13 +90,13 @@ public class EquipmentManager : MonoBehaviour
 		}
 	}
 	*/
-	void EquipDefaults()
-	{
-		foreach (Equipment e in defaultEquipment)
-		{
-			Equip(e);
-		}
-	}
+	//void EquipDefaults()
+	//{
+	//	foreach (EquipmentScript e in defaultEquipment)
+	//	{
+	//		Equip(e);
+	//	}
+	//}
 	void Update()
 	{
 		// Unequip all items if we press U

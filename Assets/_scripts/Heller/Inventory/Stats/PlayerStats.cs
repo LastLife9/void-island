@@ -7,7 +7,7 @@ public class PlayerStats : CharacterStats
 		EquipmentManager.instance.onEquipmentChanged += OnEquipmentChanged;
 	}
 	// Called when an item gets equipped/unequipped
-	void OnEquipmentChanged(Equipment newItem, Equipment oldItem)
+	void OnEquipmentChanged(EquipmentScript newItem, EquipmentScript oldItem)
 	{
 		// Add new modifiers
 		if (newItem != null)
