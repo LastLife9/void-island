@@ -51,19 +51,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   horizontalLimits: {x: -0.85, y: 0.85}
   verticalLimits: {x: -0.6, y: 1}
-  speed: 4.5
-  CharacterTransform: {fileID: 2815043595551173054}
-  CinemachineCameraTarget: {fileID: 3980406075376065656}
-  RotationSmoothTime: 0.12
-  TopClamp: 70
-  BottomClamp: 0
+  Speed: 4
+  SmoothSpeedMoment: 15
   JumpHeight: 1.2
+  JumpTimeout: 0.3
+  FallTimeout: 0.25
   checkGroundRadius: 0.1
   GroundLayers:
     serializedVersion: 2
     m_Bits: 1
-  JumpTimeout: 0.3
-  FallTimeout: 0.15
+  CharacterTransform: {fileID: 2815043595551173054}
+  CinemachineCameraTarget: {fileID: 3980406075376065656}
+  CharacterRotationSpeed: 5
+  CameraSmoothTimer: 0.1
+  TopClamp: 70
+  BottomClamp: 0
 --- !u!54 &3898104114336425514
 Rigidbody:
   m_ObjectHideFlags: 0
