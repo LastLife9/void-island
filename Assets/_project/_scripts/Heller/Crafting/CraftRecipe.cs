@@ -11,7 +11,7 @@ public class CraftRecipe : MonoBehaviour
     [SerializeField] Image itemToCraftImage;
     [SerializeField] Image slider;
     [SerializeField] Button craftButton;
-    [SerializeField] RecipesSO recipes;
+    [SerializeField] RecipesSO recipe;
     float timeToCraft = 1f;
     int[] requiredItemsCount;
     int itemToCraftCount;
@@ -20,11 +20,11 @@ public class CraftRecipe : MonoBehaviour
     bool isCanCraft = true;
     private void Awake()
     {
-        timeToCraft = recipes.timeToCraft;
-        requiredItemsCount = recipes.requiredItemsCount;
-        itemToCraftCount = recipes.itemToCraftCount;
-        requiredItems = recipes.requiredItems;
-        itemToCraft = recipes.itemToCraft;
+        timeToCraft = recipe.timeToCraft;
+        requiredItemsCount = recipe.requiredItemsCount;
+        itemToCraftCount = recipe.itemToCraftCount;
+        requiredItems = recipe.requiredItems;
+        itemToCraft = recipe.itemToCraft;
     }
     private void OnEnable()
     {
@@ -75,10 +75,11 @@ public class CraftRecipe : MonoBehaviour
         for (int i = 0; i < 100; i++ )
         {
             sliderText.text = slider.fillAmount * 100 + " %";
-            slider.fillAmount += .01f;
+            slider.fillAmount += .05f;
             yield return new WaitForSeconds(timeToCraft/100);
         }
         ItemsManager.instance.TakeItem(itemToCraft.name, itemToCraftCount);
         slider.fillAmount = 0;
+        EnableCraft();
     }
 }

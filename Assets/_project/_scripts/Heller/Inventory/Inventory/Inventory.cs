@@ -12,7 +12,10 @@ public class Inventory : MonoBehaviour
 			return;
 		}
 		instance = this;
-	}
+        onItemChangedCallback += UpdateUI;    // Subscribe to the onItemChanged callback
+        // Populate our slots array
+        slots = itemsParent.GetComponentsInChildren<InventorySlot>();
+    }
     #endregion
     public Transform itemsParent;   // The parent object of all the items
     public GameObject inventoryUI;  // The entire UI
@@ -29,10 +32,6 @@ public class Inventory : MonoBehaviour
     // return true. Else we return false.
     void Start()
     {
-        //inventory = Inventory.instance;
-        onItemChangedCallback += UpdateUI;    // Subscribe to the onItemChanged callback
-        // Populate our slots array
-        slots = itemsParent.GetComponentsInChildren<InventorySlot>();
     }
     void Update()
     {
@@ -60,7 +59,25 @@ public class Inventory : MonoBehaviour
             slots[i].ClearSlot();
         }
     }
-    public bool Add(ItemScript item)
+    public void UpdateInventory(ItemScript item)
+    {
+        if (items.Contains(item))
+        {
+            if(item.count <= 0)
+            {
+                Remove(item);
+                return;
+            }
+            onItemChangedCallback?.Invoke();
+            return;
+        }
+        if (item.count <= 0)
+        {
+            return;
+        }
+        Add(item);
+    }
+    void Add(ItemScript item)
 	{
 		// Don't do anything if it's a default item
 		//if (!item.isDefaultItem)
@@ -69,16 +86,14 @@ public class Inventory : MonoBehaviour
 		if (items.Count >= space)
 		{
 			Debug.Log("Not enough room.");
-			return false;
 		}
 		items.Add(item);    // Add item to list
 		// Trigger callback
 		onItemChangedCallback?.Invoke();
 		//}
-		return true;
 	}
 	// Remove an item
-	public void Remove(ItemScript item)
+	void Remove(ItemScript item)
 	{
 		items.Remove(item);     // Remove item from list
 		// Trigger callback

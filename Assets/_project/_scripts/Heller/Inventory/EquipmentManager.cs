@@ -48,7 +48,7 @@ public class EquipmentManager : MonoBehaviour
 		{
 			// Add the item to the inventory
 			oldItem = currentEquipment[slotIndex];
-			inventory.Add(oldItem);
+			//inventory.Add(oldItem);
 			//SetBlendShapeWeight(oldItem, 0);
 			// Destroy the mesh
 			//if (currentMeshes[slotIndex] != null)

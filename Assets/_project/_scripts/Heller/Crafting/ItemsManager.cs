@@ -12,6 +12,13 @@ public class ItemsManager : MonoBehaviour
         instance = this;
         BuildItemDatabase();
     }
+    private void Start()
+    {
+        foreach (var itemScript in itemsScript) 
+        {
+            Inventory.instance.UpdateInventory(itemScript);
+        }
+    }
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.U))
@@ -43,12 +50,12 @@ public class ItemsManager : MonoBehaviour
     {
         ItemScript item = GetItem(name);
         item.ChangeItemCount(count);
-        Inventory.instance.Add(item);
+        Inventory.instance.UpdateInventory(item);
     }
     public void GiveItem(string name, int count)
     {
         ItemScript item = GetItem(name);
         item.ChangeItemCount(-count);
-        Inventory.instance.Remove(item);
+        Inventory.instance.UpdateInventory(item);
     }
 }

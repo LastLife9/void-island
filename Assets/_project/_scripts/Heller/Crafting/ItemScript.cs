@@ -1,7 +1,6 @@
 using UnityEngine;
 public class ItemScript
 {
-    public int id;
     public string name;
     public Sprite icon;
     public int count;
@@ -35,6 +34,6 @@ public class ItemScript
     }
     public void RemoveFromInventory()
     {
-        Inventory.instance.Remove(this);
+        //Inventory.instance.Remove(this);
     }
 }
