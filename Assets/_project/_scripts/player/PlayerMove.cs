@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
@@ -20,6 +18,7 @@ public class PlayerMove : MonoBehaviour
     private float _rotationVelocity;
 
     [Header("Camera")]
+    public Transform CharacterTransform;
     public GameObject CinemachineCameraTarget;
     public float RotationSmoothTime = 0.12f;
     public float TopClamp = 70.0f;
