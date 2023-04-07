@@ -2,11 +2,11 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 
-public class UIVirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
+public class VirtualJoystick : VirualInputBase, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
     [System.Serializable]
     public class Event : UnityEvent<Vector2> { }
-    
+
     [Header("Rect References")]
     public RectTransform containerRect;
     public RectTransform handleRect;
@@ -20,15 +20,47 @@ public class UIVirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandle
     [Header("Output")]
     public Event joystickOutputEvent;
 
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        PlayerInputState.OnStateChange += OnInputStateChange;
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        PlayerInputState.OnStateChange -= OnInputStateChange;
+    }
+
+    protected override void OnInputStateChange(InputState newState)
+    {
+        base.OnInputStateChange(newState);
+    }
+
+    protected override void SetEnable()
+    {
+        base.SetEnable();
+
+        handleRect.gameObject.SetActive(true);
+    }
+
+    protected override void SetDisable()
+    {
+        base.SetDisable();
+
+        UpdateHandleRectPosition(Vector2.zero);
+        handleRect.gameObject.SetActive(false);
+    }
+
+
     void Start()
     {
         SetupHandle();
     }
 
-
     private void SetupHandle()
     {
-        if(handleRect)
+        if(handleRect.gameObject.activeSelf)
         {
             UpdateHandleRectPosition(Vector2.zero);
         }
@@ -36,11 +68,17 @@ public class UIVirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandle
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        if (!_enable) return;
         OnDrag(eventData);
     }
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (!_enable)
+        {
+            OutputPointerEventValue(Vector2.zero);
+            return;
+        }
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             containerRect, eventData.position, eventData.pressEventCamera, out Vector2 position);
         
@@ -51,7 +89,7 @@ public class UIVirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandle
 
         OutputPointerEventValue(outputPosition * magnitudeMultiplier);
 
-        if (handleRect)
+        if (handleRect.gameObject.activeSelf)
         {
             UpdateHandleRectPosition(clampedPosition * joystickRange);
         }
@@ -60,9 +98,14 @@ public class UIVirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandle
 
     public void OnPointerUp(PointerEventData eventData)
     {
+        if (!_enable)
+        {
+            OutputPointerEventValue(Vector2.zero);
+            return;
+        }
         OutputPointerEventValue(Vector2.zero);
 
-        if(handleRect)
+        if(handleRect.gameObject.activeSelf)
         {
              UpdateHandleRectPosition(Vector2.zero);
         }
@@ -109,5 +152,4 @@ public class UIVirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandle
     {
         return -value;
     }
-    
 }

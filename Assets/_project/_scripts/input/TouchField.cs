@@ -16,7 +16,7 @@ public class TouchLocation
 }
 
 
-public class TouchField : MonoBehaviour
+public class TouchField : VirualInputBase
 {
     public List<TouchLocation> touches = new List<TouchLocation>();
 
@@ -31,9 +31,37 @@ public class TouchField : MonoBehaviour
     Vector2 pointerOld;
     Vector2 touchDist;
 
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        PlayerInputState.OnStateChange += OnInputStateChange;
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        PlayerInputState.OnStateChange -= OnInputStateChange;
+    }
+
+    protected override void OnInputStateChange(InputState newState)
+    {
+        base.OnInputStateChange(newState);
+    }
+    protected override void SetDisable()
+    {
+        base.SetDisable();
+        OutputPointerEventValue(new Vector2());
+    }
+
     // Update is called once per frame
     void Update()
     {
+        if (!_enable)
+        {
+            OutputPointerEventValue(new Vector2());
+            return;
+        }
+
         if (Input.touchCount == 0)
         {
             if (Input.GetMouseButton(0))
@@ -95,64 +123,3 @@ public class TouchField : MonoBehaviour
         touchFieldOutputEvent.Invoke(pointerPosition * Multiplier);
     }
 }
-
-
-//public class TouchField : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
-//{
-//    [System.Serializable]
-//    public class Event : UnityEvent<Vector2> { }
-//    [Header("Output")]
-//    public Event touchFieldOutputEvent;
-
-//    public float Multiplier = 0.3f;
-
-//    [HideInInspector]
-//    public Vector2 TouchDist;
-//    [HideInInspector]
-//    public Vector2 PointerOld;
-//    [HideInInspector]
-//    protected int PointerId;
-//    [HideInInspector]
-//    public bool Pressed;
-
-//    void Update()
-//    {
-//        if (Pressed)
-//        {
-//            if (PointerId >= 0 && PointerId < Input.touches.Length)
-//            {
-//                TouchDist = Input.touches[PointerId].position - PointerOld;
-//                PointerOld = Input.touches[PointerId].position;
-//            }
-//            else
-//            {
-//                TouchDist = new Vector2(Input.mousePosition.x, Input.mousePosition.y) - PointerOld;
-//                PointerOld = Input.mousePosition;
-//            }
-//        }
-//        else
-//        {
-//            TouchDist = new Vector2();
-//        }
-
-//        OutputPointerEventValue(TouchDist);
-//    }
-
-//    public void OnPointerDown(PointerEventData eventData)
-//    {
-//        Pressed = true;
-//        PointerId = eventData.pointerId;
-//        PointerOld = eventData.position;
-//    }
-
-
-//    public void OnPointerUp(PointerEventData eventData)
-//    {
-//        Pressed = false;
-//    }
-
-//    void OutputPointerEventValue(Vector2 pointerPosition)
-//    {
-//        touchFieldOutputEvent.Invoke(pointerPosition * Multiplier);
-//    }
-//}
