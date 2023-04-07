@@ -30,9 +30,9 @@ public class EquipmentScript : ItemScript
         }
         count = 0;
     }
-    public override void Use()
+    public override void MoveItem()
     {
-        base.Use();
+        base.MoveItem();
         EquipmentManager.instance.Equip(this);  // Equip it
         RemoveFromInventory();                  // Remove it from inventory
     }

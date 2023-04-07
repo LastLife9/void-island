@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c63ebf4d0a7ec33488801186c733d172, type: 3}
   m_Name: Leaf
   m_EditorClassIdentifier: 
-  id: 3
+  itemType: 4
   name: Leaf
   icon: {fileID: -1380939564, guid: 3c0ed2dfabf48374b9d7bb3d3d87c512, type: 3}

@@ -18,7 +18,6 @@ public class Inventory : MonoBehaviour
     }
     #endregion
     public Transform itemsParent;   // The parent object of all the items
-    public GameObject inventoryUI;  // The entire UI
     //Inventory inventory;    // Our current inventory
     InventorySlot[] slots;  // List of all the slots
     // Callback which is triggered when
@@ -36,10 +35,6 @@ public class Inventory : MonoBehaviour
     void Update()
     {
         // Check to see if we should open/close the inventory
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            inventoryUI.SetActive(!inventoryUI.activeSelf);
-        }
     }
     // Update the inventory UI by:
     //		- Adding items
@@ -63,7 +58,7 @@ public class Inventory : MonoBehaviour
     {
         if (items.Contains(item))
         {
-            if(item.count <= 0)
+            if(item.count <= 0 || item.itemState != ItemState.Inventory)
             {
                 Remove(item);
                 return;
@@ -75,7 +70,10 @@ public class Inventory : MonoBehaviour
         {
             return;
         }
-        Add(item);
+        if(item.itemState == ItemState.Inventory)
+        {
+            Add(item);
+        }
     }
     void Add(ItemScript item)
 	{

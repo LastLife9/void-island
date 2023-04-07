@@ -3,16 +3,14 @@ using UnityEngine;
 public class EquipmentManager : MonoBehaviour
 {
 	#region Singleton
-	public enum MeshBlendShape { Torso, Arms, Legs };
-	public EquipmentScript[] defaultEquipment;
 	public static EquipmentManager instance;
-	//public SkinnedMeshRenderer targetMesh;
-	//SkinnedMeshRenderer[] currentMeshes;
 	void Awake()
 	{
 		instance = this;
 	}
 	#endregion
+	public enum MeshBlendShape { Head, Torso, Pants, Legs };
+	public EquipmentScript[] defaultEquipment;
 	EquipmentScript[] currentEquipment;   // Items we currently have equipped
 	// Callback for when an item is equipped/unequipped
 	public delegate void OnEquipmentChanged(EquipmentScript newItem, EquipmentScript oldItem);
