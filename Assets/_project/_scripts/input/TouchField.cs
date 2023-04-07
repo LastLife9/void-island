@@ -34,14 +34,24 @@ public class TouchField : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.touchCount == 0 && Input.GetMouseButton(0))
+        if (Input.touchCount == 0)
         {
-            if(Input.mousePosition.x > Screen.width / 2f)
+            if (Input.GetMouseButton(0))
             {
-                touchDist = new Vector2(Input.mousePosition.x, Input.mousePosition.y) - pointerOld;
-                pointerOld = Input.mousePosition;
+                if (Input.mousePosition.x > Screen.width / 2f)
+                {
+                    touchDist = new Vector2(Input.mousePosition.x, Input.mousePosition.y) - pointerOld;
+                    pointerOld = Input.mousePosition;
+                }
+                else
+                {
+                    touchDist = new Vector2();
+                }
             }
-            
+            else
+            {
+                touchDist = new Vector2();
+            }
         }
         else
         {

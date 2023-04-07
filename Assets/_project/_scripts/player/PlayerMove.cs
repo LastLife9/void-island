@@ -1,39 +1,47 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-    //private Joystick joystick;
+    public Vector2 horizontalLimits;
+    public Vector2 verticalLimits;
+
+    [Header("Move")]
+    public float Speed = 4.5f;
+    public float SmoothSpeedMoment = 3f;
+
+    [Header("Jump")]
+    public float JumpHeight = 5f;
+    public float JumpTimeout = 0.50f;
+    public float FallTimeout = 0.15f;
+
+    [Header("Ground")]
+    public float checkGroundRadius = 0.2f;
+    public LayerMask GroundLayers;
+
+    [Header("Camera")]
+    public Transform CharacterTransform;
+    public GameObject CinemachineCameraTarget;
+    public float CharacterRotationSpeed = 5f;
+    public float CameraSmoothTimer = 0.15f;
+    public float TopClamp = 70.0f;
+    public float BottomClamp = -30.0f;
+
+
     private Rigidbody rb;
     private Animator anim;
     private GameObject _mainCamera;
+
     private Vector2 inputVector;
     private Vector2 look;
     private Vector2 move;
 
-    public Vector2 horizontalLimits;
-    public Vector2 verticalLimits;
+    private Vector3 moveVector;
 
-    [Header("Main")]
-    public float speed = 3;
-    private float _rotationVelocity;
+    private bool _isGround = false;
+    private bool _jump = false;
 
-    [Header("Camera")]
-    public GameObject CinemachineCameraTarget;
-    public float RotationSmoothTime = 0.12f;
-    public float TopClamp = 70.0f;
-    public float BottomClamp = -30.0f;
-
-    [Header("Jump")]
-    private bool isGround = false;
-    private bool jump = false;
-    public float JumpHeight = 5f;
-    public float checkGroundRadius = 0.2f;
-    public LayerMask GroundLayers;
-    public float JumpTimeout = 0.50f;
-    public float FallTimeout = 0.15f;
-
+    private float _rotationVelocityX;
+    private float _rotationVelocityY;
     private float _jumpTimeoutDelta;
     private float _fallTimeoutDelta;
 
@@ -46,7 +54,6 @@ public class PlayerMove : MonoBehaviour
 
     private void Awake()
     {
-        //joystick = FindObjectOfType<Joystick>();
         rb = GetComponent<Rigidbody>();
         anim = GetComponentInChildren<Animator>();
         _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
@@ -74,14 +81,14 @@ public class PlayerMove : MonoBehaviour
 
     private void Jump()
     {
-        if (isGround)
+        if (_isGround)
         {
             _fallTimeoutDelta = FallTimeout;
 
             anim.SetBool(_animIDJump, false);
             anim.SetBool(_animIDFreeFall, false);
 
-            if (jump)
+            if (_jump)
             {
                 float jumpForce = CalculateJumpSpeed(JumpHeight, Physics.gravity.magnitude);
 
@@ -97,27 +104,20 @@ public class PlayerMove : MonoBehaviour
         }
         else
         {
-            // reset the jump timeout timer
             _jumpTimeoutDelta = JumpTimeout;
 
-            // fall timeout
             if (_fallTimeoutDelta >= 0.0f)
             {
                 _fallTimeoutDelta -= Time.deltaTime;
             }
             else
             {
-                // update animator if using character
                 anim.SetBool(_animIDFreeFall, true);
             }
 
-            // if we are not grounded, do not jump
-            jump = false;
+            _jump = false;
         }
-        
     }
-
-    
 
     private void Move()
     {
@@ -126,34 +126,53 @@ public class PlayerMove : MonoBehaviour
             Mathf.Clamp(move.y, verticalLimits.x, verticalLimits.y)
             );
 
-        Vector3 moveVector = new Vector3(inputVector.x, 0, inputVector.y);
-        float _targetRotation = Mathf.Atan2(moveVector.x, moveVector.z) * Mathf.Rad2Deg +
-                                  _mainCamera.transform.eulerAngles.y;
-        Vector3 targetDirection = (Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward).normalized * moveVector.magnitude;
+        Vector3 _moveVector = new Vector3(inputVector.x, 0, inputVector.y);
+        moveVector = Vector3.Slerp(
+            moveVector,
+            new Vector3(move.x, 0.0f, move.y),
+            SmoothSpeedMoment * Time.deltaTime);
+
+        float _targetRotation = Mathf.Atan2(_moveVector.x, _moveVector.z)
+            * Mathf.Rad2Deg
+            + _mainCamera.transform.eulerAngles.y;
+        Vector3 targetDirection = 
+            (Quaternion.Euler(0.0f, _targetRotation, 0.0f)
+            * Vector3.forward).normalized
+            * _moveVector.magnitude
+            * moveVector.magnitude;
 
         rb.velocity = new Vector3(
-            targetDirection.x * speed, 
+            targetDirection.x * Speed * moveVector.magnitude,
             rb.velocity.y,
-            targetDirection.z * speed);
+            targetDirection.z * Speed * moveVector.magnitude);
 
-        anim.SetFloat(_animIDRight, move.x);
-        anim.SetFloat(_animIDForward, move.y);
-        anim.SetFloat(_animIDMotionSpeed, new Vector2(move.x, move.y).magnitude);
+        anim.SetFloat(_animIDRight, moveVector.x);
+        anim.SetFloat(_animIDForward, moveVector.z);
+        anim.SetFloat(_animIDMotionSpeed, moveVector.magnitude);
     }
 
     private void CameraRotation()
     {
+        Transform camTargetT = CinemachineCameraTarget.transform;
+
         float XaxisRotation = look.x;
         float YaxisRotation = look.y;
-        Vector3 euler = CinemachineCameraTarget.transform.eulerAngles + new Vector3(-YaxisRotation, 0, 0);
-        euler = new Vector3(Mathf.Clamp(euler.x, BottomClamp, TopClamp), euler.y, euler.z);
-        CinemachineCameraTarget.transform.eulerAngles = euler;
 
-        float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y,
-            transform.eulerAngles.y + XaxisRotation * 10f,
-            ref _rotationVelocity,
-            RotationSmoothTime);
-        transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+        float yRotation = Mathf.SmoothDampAngle(
+            camTargetT.eulerAngles.y,
+            camTargetT.eulerAngles.y + XaxisRotation * 10f, 
+            ref _rotationVelocityY, CameraSmoothTimer);
+        float xRotation = Mathf.Clamp(Mathf.SmoothDampAngle(
+            camTargetT.eulerAngles.x,
+            camTargetT.eulerAngles.x - YaxisRotation * 10f, 
+            ref _rotationVelocityX, CameraSmoothTimer), 
+            BottomClamp, TopClamp);
+
+        camTargetT.rotation = Quaternion.Euler(xRotation, yRotation, 0.0f);
+        CharacterTransform.rotation = Quaternion.Slerp(
+            CharacterTransform.rotation, 
+            Quaternion.Euler(0.0f, yRotation, 0.0f), 
+            CharacterRotationSpeed * Time.deltaTime);
     }
 
     public void VirtualLookInput(Vector2 virtualLookDirection)
@@ -168,18 +187,20 @@ public class PlayerMove : MonoBehaviour
 
     public void VirtualJumpInput()
     {
-        jump = true;
+        _jump = true;
     }
 
     private void GroundedCheck()
     {
         // set sphere position, with offset
         Vector3 spherePosition = transform.position;
-        isGround = Physics.CheckSphere(spherePosition, checkGroundRadius, GroundLayers,
+        _isGround = Physics.CheckSphere(spherePosition,
+            checkGroundRadius,
+            GroundLayers,
             QueryTriggerInteraction.Ignore);
 
         // update animator if using character
-        anim.SetBool(_animIDGrounded, isGround);
+        anim.SetBool(_animIDGrounded, _isGround);
     }
 
     private float CalculateJumpSpeed(float jumpHeight, float gravity)
