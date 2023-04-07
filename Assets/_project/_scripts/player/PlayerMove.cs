@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-    public Vector2 horizontalLimits;
-    public Vector2 verticalLimits;
+    public Vector2 HorizontalLimits;
+    public Vector2 VerticalLimits;
 
     [Header("Move")]
     public float Speed = 4.5f;
@@ -15,7 +15,7 @@ public class PlayerMove : MonoBehaviour
     public float FallTimeout = 0.15f;
 
     [Header("Ground")]
-    public float checkGroundRadius = 0.2f;
+    public float CheckGroundRadius = 0.2f;
     public LayerMask GroundLayers;
 
     [Header("Camera")]
@@ -26,7 +26,6 @@ public class PlayerMove : MonoBehaviour
     public float TopClamp = 70.0f;
     public float BottomClamp = -30.0f;
 
-
     private Rigidbody rb;
     private Animator anim;
     private GameObject _mainCamera;
@@ -34,7 +33,6 @@ public class PlayerMove : MonoBehaviour
     private Vector2 inputVector;
     private Vector2 look;
     private Vector2 move;
-
     private Vector3 moveVector;
 
     private bool _isGround = false;
@@ -122,8 +120,8 @@ public class PlayerMove : MonoBehaviour
     private void Move()
     {
         inputVector = new Vector2(
-            Mathf.Clamp(move.x, horizontalLimits.x, horizontalLimits.y),
-            Mathf.Clamp(move.y, verticalLimits.x, verticalLimits.y)
+            Mathf.Clamp(move.x, HorizontalLimits.x, HorizontalLimits.y),
+            Mathf.Clamp(move.y, VerticalLimits.x, VerticalLimits.y)
             );
 
         Vector3 _moveVector = new Vector3(inputVector.x, 0, inputVector.y);
@@ -192,14 +190,12 @@ public class PlayerMove : MonoBehaviour
 
     private void GroundedCheck()
     {
-        // set sphere position, with offset
         Vector3 spherePosition = transform.position;
         _isGround = Physics.CheckSphere(spherePosition,
-            checkGroundRadius,
+            CheckGroundRadius,
             GroundLayers,
             QueryTriggerInteraction.Ignore);
 
-        // update animator if using character
         anim.SetBool(_animIDGrounded, _isGround);
     }
 
@@ -210,11 +206,11 @@ public class PlayerMove : MonoBehaviour
 
     private void AssignAnimationIDs()
     {
-        _animIDForward = Animator.StringToHash("Forward");
-        _animIDRight = Animator.StringToHash("Right");
-        _animIDGrounded = Animator.StringToHash("Grounded");
-        _animIDJump = Animator.StringToHash("Jump");
-        _animIDFreeFall = Animator.StringToHash("FreeFall");
-        _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
+        _animIDForward      = Animator.StringToHash("Forward");
+        _animIDRight        = Animator.StringToHash("Right");
+        _animIDGrounded     = Animator.StringToHash("Grounded");
+        _animIDJump         = Animator.StringToHash("Jump");
+        _animIDFreeFall     = Animator.StringToHash("FreeFall");
+        _animIDMotionSpeed  = Animator.StringToHash("MotionSpeed");
     }
 }
