@@ -1,9 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.EventSystems;
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 
 public class TouchLocation
 {
@@ -16,7 +13,7 @@ public class TouchLocation
 }
 
 
-public class TouchField : VirualInputBase
+public class VirtualTouchField : InputBase
 {
     public List<TouchLocation> touches = new List<TouchLocation>();
 

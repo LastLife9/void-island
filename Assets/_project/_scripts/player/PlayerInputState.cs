@@ -5,7 +5,7 @@ public class PlayerInputState : MonoBehaviour
 {
     public static Action<InputState> OnStateChange;
 
-    private InputState _currentState = InputState.Main;
+    private InputState _currentState = InputState.MainMove;
 
     private void Start()
     {
@@ -44,6 +44,7 @@ public class PlayerInputState : MonoBehaviour
 
 public enum InputState
 {
-    Main,
+    MainMove,
+    MainFly,
     Lock 
 }

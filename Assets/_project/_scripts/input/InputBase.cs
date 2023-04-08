@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class VirualInputBase : MonoBehaviour
+public class InputBase : MonoBehaviour
 {
     protected bool _enable = true;
     protected InputState _inputState;
@@ -22,7 +21,10 @@ public class VirualInputBase : MonoBehaviour
 
         switch (_inputState)
         {
-            case InputState.Main:
+            case InputState.MainMove:
+                SetEnable();
+                break;
+            case InputState.MainFly:
                 SetEnable();
                 break;
             case InputState.Lock:

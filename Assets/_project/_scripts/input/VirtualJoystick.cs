@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 
-public class VirtualJoystick : VirualInputBase, IPointerDownHandler, IDragHandler, IPointerUpHandler
+public class VirtualJoystick : InputBase, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
     [System.Serializable]
     public class Event : UnityEvent<Vector2> { }
