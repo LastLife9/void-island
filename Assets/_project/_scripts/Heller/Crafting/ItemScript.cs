@@ -62,6 +62,7 @@ public class ItemScript
         {
             UpdateItem(ItemState.Inventory);
         }
+        Inventory.instance.UpdateInventory(this);
     }
     void UpdateItem(ItemState state)
     {

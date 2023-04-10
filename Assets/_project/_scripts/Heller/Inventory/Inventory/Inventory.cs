@@ -29,13 +29,6 @@ public class Inventory : MonoBehaviour
 	public List<ItemScript> items = new List<ItemScript>();
     // Add a new item. If there is enough room we
     // return true. Else we return false.
-    void Start()
-    {
-    }
-    void Update()
-    {
-        // Check to see if we should open/close the inventory
-    }
     // Update the inventory UI by:
     //		- Adding items
     //		- Clearing empty slots

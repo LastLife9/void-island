@@ -9,6 +9,7 @@ public class QuickAccessScript : MonoBehaviour
     void Awake()
     {
         instance = this;
+        btnNumber = 0;
     }
     #endregion
     [SerializeField] Button[] btns;
@@ -17,8 +18,20 @@ public class QuickAccessScript : MonoBehaviour
     [SerializeField] TextMeshProUGUI[] btnsCount;
     [SerializeField] Image[] btnsImage;
     int btnNumber = 0;
+    private void Start()
+    {
+        for (int i = 0; i < btns.Length; i++)
+        {
+            btnsCount[i].text = "";
+            inventoryPanelCount[i].text = "";
+            btnsImage[i].enabled = false;
+            inventoryPanelImages[i].enabled = false;
+        }
+    }
     public void AddItemToQuickAccess(UnityAction unityAction, ItemScript itemScript)
     {
+        btnsImage[btnNumber].enabled = true;
+        inventoryPanelImages[btnNumber].enabled = true;
         btnsImage[btnNumber].sprite = itemScript.icon;
         btnsCount[btnNumber].text = itemScript.count.ToString();
         inventoryPanelImages[btnNumber].sprite = itemScript.icon;
