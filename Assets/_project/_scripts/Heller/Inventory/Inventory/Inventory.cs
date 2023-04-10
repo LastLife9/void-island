@@ -12,10 +12,12 @@ public class Inventory : MonoBehaviour
 			return;
 		}
 		instance = this;
-	}
+        onItemChangedCallback += UpdateUI;    // Subscribe to the onItemChanged callback
+        // Populate our slots array
+        slots = itemsParent.GetComponentsInChildren<InventorySlot>();
+    }
     #endregion
     public Transform itemsParent;   // The parent object of all the items
-    public GameObject inventoryUI;  // The entire UI
     //Inventory inventory;    // Our current inventory
     InventorySlot[] slots;  // List of all the slots
     // Callback which is triggered when
@@ -27,21 +29,6 @@ public class Inventory : MonoBehaviour
 	public List<ItemScript> items = new List<ItemScript>();
     // Add a new item. If there is enough room we
     // return true. Else we return false.
-    void Start()
-    {
-        //inventory = Inventory.instance;
-        onItemChangedCallback += UpdateUI;    // Subscribe to the onItemChanged callback
-        // Populate our slots array
-        slots = itemsParent.GetComponentsInChildren<InventorySlot>();
-    }
-    void Update()
-    {
-        // Check to see if we should open/close the inventory
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            inventoryUI.SetActive(!inventoryUI.activeSelf);
-        }
-    }
     // Update the inventory UI by:
     //		- Adding items
     //		- Clearing empty slots
@@ -60,7 +47,28 @@ public class Inventory : MonoBehaviour
             slots[i].ClearSlot();
         }
     }
-    public bool Add(ItemScript item)
+    public void UpdateInventory(ItemScript item)
+    {
+        if (items.Contains(item))
+        {
+            if(item.count <= 0 || item.itemState != ItemState.Inventory)
+            {
+                Remove(item);
+                return;
+            }
+            onItemChangedCallback?.Invoke();
+            return;
+        }
+        if (item.count <= 0)
+        {
+            return;
+        }
+        if(item.itemState == ItemState.Inventory)
+        {
+            Add(item);
+        }
+    }
+    void Add(ItemScript item)
 	{
 		// Don't do anything if it's a default item
 		//if (!item.isDefaultItem)
@@ -69,16 +77,14 @@ public class Inventory : MonoBehaviour
 		if (items.Count >= space)
 		{
 			Debug.Log("Not enough room.");
-			return false;
 		}
 		items.Add(item);    // Add item to list
 		// Trigger callback
 		onItemChangedCallback?.Invoke();
 		//}
-		return true;
 	}
 	// Remove an item
-	public void Remove(ItemScript item)
+	void Remove(ItemScript item)
 	{
 		items.Remove(item);     // Remove item from list
 		// Trigger callback

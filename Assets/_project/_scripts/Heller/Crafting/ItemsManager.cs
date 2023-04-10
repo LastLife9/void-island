@@ -1,30 +1,23 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 public class ItemsManager : MonoBehaviour
 {
+    #region Singleton
     public static ItemsManager instance;
-    [SerializeField] GameObject craftPanel;
-    List<ItemScript> itemsScript = new List<ItemScript>();
-    public List<Item> items = new List<Item>();
     void Awake()
     {
         instance = this;
         BuildItemDatabase();
     }
-    private void Update()
+    #endregion
+    [SerializeField] GameObject craftPanel;
+    List<ItemScript> itemsScript = new List<ItemScript>();
+    public List<Item> items = new List<Item>();
+    private void Start()
     {
-        if(Input.GetKeyDown(KeyCode.U))
+        foreach (var itemScript in itemsScript) 
         {
-            craftPanel.SetActive(!craftPanel.activeInHierarchy);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            TakeItem("Leaf", 1);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            TakeItem("Wood", 1);
+            Inventory.instance.UpdateInventory(itemScript);
         }
     }
     public ItemScript GetItem(string name)
@@ -41,14 +34,10 @@ public class ItemsManager : MonoBehaviour
     }
     public void TakeItem(string name, int count)
     {
-        ItemScript item = GetItem(name);
-        item.ChangeItemCount(count);
-        Inventory.instance.Add(item);
+        GetItem(name).ChangeItemCount(count);
     }
     public void GiveItem(string name, int count)
     {
-        ItemScript item = GetItem(name);
-        item.ChangeItemCount(-count);
-        Inventory.instance.Remove(item);
+        GetItem(name).ChangeItemCount(-count);
     }
 }
