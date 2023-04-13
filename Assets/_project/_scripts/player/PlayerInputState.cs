@@ -5,7 +5,7 @@ public class PlayerInputState : MonoBehaviour
 {
     public static Action<InputState> OnStateChange;
 
-    private InputState _currentState = InputState.MainMove;
+    private InputState _currentState = InputState.MainWalk;
 
     [SerializeField] private GameObject moveInputPanel;
     [SerializeField] private GameObject flyInputPanel;
@@ -32,7 +32,7 @@ public class PlayerInputState : MonoBehaviour
     {
         switch (_currentState)
         {
-            case InputState.MainMove:
+            case InputState.MainWalk:
                 DisableAllPanels();
                 moveInputPanel.SetActive(true);
                 break;
@@ -57,7 +57,7 @@ public class PlayerInputState : MonoBehaviour
 
 public enum InputState
 {
-    MainMove,
+    MainWalk,
     MainFly,
     Lock 
 }

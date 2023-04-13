@@ -14,7 +14,7 @@ public class UIPanelsManager : MonoBehaviour
             inGameUI.SetActive(!inGameUI.activeSelf);
             if(inGameUI.activeSelf)
             {
-                playerInputState.SetState(InputState.Main);
+                playerInputState.SetState(InputState.MainWalk);
                 return;
             }
             playerInputState.SetState(InputState.Lock);
@@ -26,7 +26,7 @@ public class UIPanelsManager : MonoBehaviour
             inGameUI.SetActive(!inGameUI.activeSelf);
             if (inGameUI.activeSelf)
             {
-                playerInputState.SetState(InputState.Main);
+                playerInputState.SetState(InputState.MainWalk);
                 return;
             }
             playerInputState.SetState(InputState.Lock);

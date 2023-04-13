@@ -15,18 +15,20 @@ public class PlayerMove : MonoBehaviour
     private List<MoveSettings> _moveSettings = new List<MoveSettings>();
     private Dictionary<MoveType, MoveSettings> _moveSettingsDict;
     private MoveSettings _currentMoveSettings;
+    private PlayerInputState _inputState;
     private MoveType _moveType = MoveType.Walk;
 
     private Rigidbody _rb;
     private Animator _anim;
     private GameObject _mainCamera;
 
-    private Vector2 _inputVector;
     private Vector2 _look;
     private Vector2 _move;
 
+    private Vector2 _inputVector;
     private Vector3 _smoothMoveVector;
     private Vector3 _targetDirection;
+    private Quaternion _lookDirection;
 
     private bool _isGround = false;
     private bool _jump = false;
@@ -49,6 +51,7 @@ public class PlayerMove : MonoBehaviour
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
+        _inputState = GetComponent<PlayerInputState>();
         _anim = GetComponentInChildren<Animator>();
         _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
     }
@@ -99,10 +102,6 @@ public class PlayerMove : MonoBehaviour
 
 
     #region Main
-    private void OnMoveStateChange(MoveType state)
-    {
-        
-    }
     private void Jump()
     {
         if (_isGround)
@@ -147,14 +146,17 @@ public class PlayerMove : MonoBehaviour
         _inputVector = CalculateInput();
         _smoothMoveVector = CalculateSmoothInput();
         _targetDirection = CalculateDirection();
+        _lookDirection = CalculateLookDirection();
 
         switch (_moveType)
         {
             case MoveType.Walk:
                 Walk();
+                CharacterWalkRotation();
                 break;
             case MoveType.Fly:
                 Fly();
+                CharacterFlyRotation();
                 break;
             default:
                 break;
@@ -162,7 +164,14 @@ public class PlayerMove : MonoBehaviour
     }
     private void Fly()
     {
+        _rb.velocity = new Vector3(
+            _targetDirection.x * _currentMoveSettings.Speed * _smoothMoveVector.magnitude,
+            _rb.velocity.y,
+            _targetDirection.z * _currentMoveSettings.Speed * _smoothMoveVector.magnitude);
 
+        _anim.SetFloat(_animIDRight, _smoothMoveVector.x);
+        _anim.SetFloat(_animIDForward, _smoothMoveVector.z);
+        _anim.SetFloat(_animIDMotionSpeed, _smoothMoveVector.magnitude);
     }
     private void Walk()
     {
@@ -177,26 +186,15 @@ public class PlayerMove : MonoBehaviour
     }
     private void CameraRotation()
     {
-        Transform camTargetT = CinemachineCameraTarget.transform;
-
-        float XaxisRotation = _look.x;
-        float YaxisRotation = _look.y;
-
-        float yRotation = Mathf.SmoothDampAngle(
-            camTargetT.eulerAngles.y,
-            camTargetT.eulerAngles.y + XaxisRotation * 10f, 
-            ref _rotationVelocityY, _currentMoveSettings.CameraSmoothTimer);
-        float xRotation = Mathf.Clamp(Mathf.SmoothDampAngle(
-            camTargetT.eulerAngles.x,
-            camTargetT.eulerAngles.x - YaxisRotation * 10f, 
-            ref _rotationVelocityX, _currentMoveSettings.CameraSmoothTimer),
-            _currentMoveSettings.BottomClamp, _currentMoveSettings.TopClamp);
-
-        camTargetT.rotation = Quaternion.Euler(xRotation, yRotation, 0.0f);
-        CharacterTransform.rotation = Quaternion.Slerp(
-            CharacterTransform.rotation, 
-            Quaternion.Euler(0.0f, yRotation, 0.0f),
-            _currentMoveSettings.CharacterRotationSpeed * Time.deltaTime);
+        CinemachineCameraTarget.transform.rotation = _lookDirection;
+    }
+    private void CharacterWalkRotation()
+    {
+        CharacterTransform.rotation = CalculateSlerpYAxisRotation();
+    }
+    private void CharacterFlyRotation()
+    {
+        CharacterTransform.rotation = CalculateLookDirection();
     }
     #endregion
 
@@ -214,9 +212,31 @@ public class PlayerMove : MonoBehaviour
     {
         _jump = true;
     }
-    public void VirtualFlyInput(bool fly)
+    public void VirtualFlyInput()
     {
-        _fly = fly;
+        MoveStateChange(MoveType.Fly);
+    }
+    public void VirtualWalkInput()
+    {
+        MoveStateChange(MoveType.Walk);
+    }
+    private void MoveStateChange(MoveType state)
+    {
+        switch (state)
+        {
+            case MoveType.Walk:
+                _moveType = MoveType.Walk;
+                _inputState.SetState(InputState.MainWalk);
+                break;
+            case MoveType.Fly:
+                _moveType = MoveType.Fly;
+                _inputState.SetState(InputState.MainFly);
+                break;
+            default:
+                break;
+        }
+
+        _currentMoveSettings = GetSettings(_moveType);
     }
     #endregion
 
@@ -264,6 +284,45 @@ public class PlayerMove : MonoBehaviour
             * Vector3.forward).normalized
             * _moveVector.magnitude
             * _smoothMoveVector.magnitude;
+    }
+    private Quaternion CalculateLookDirection()
+    {
+        Transform camTargetT = CinemachineCameraTarget.transform;
+
+        float XaxisRotation = _look.x;
+        float YaxisRotation = _look.y;
+
+        float yRotation = Mathf.SmoothDampAngle(
+            camTargetT.eulerAngles.y,
+            camTargetT.eulerAngles.y + XaxisRotation * 10f,
+            ref _rotationVelocityY, _currentMoveSettings.CameraSmoothTimer);
+        float xRotation = Mathf.SmoothDampAngle(
+            camTargetT.eulerAngles.x,
+            camTargetT.eulerAngles.x - YaxisRotation * 10f,
+            ref _rotationVelocityX, _currentMoveSettings.CameraSmoothTimer);
+        //float xRotation = Mathf.Clamp(Mathf.SmoothDampAngle(
+        //    camTargetT.eulerAngles.x,
+        //    camTargetT.eulerAngles.x - YaxisRotation * 10f,
+        //    ref _rotationVelocityX, _currentMoveSettings.CameraSmoothTimer),
+        //    _currentMoveSettings.BottomClamp, _currentMoveSettings.TopClamp);
+
+        return Quaternion.Euler(xRotation, yRotation, 0.0f);
+    }
+    private Quaternion CalculateSlerpYAxisRotation()
+    {
+        Transform camTargetT = CinemachineCameraTarget.transform;
+
+        float XaxisRotation = _look.x;
+
+        float yRotation = Mathf.SmoothDampAngle(
+            camTargetT.eulerAngles.y,
+            camTargetT.eulerAngles.y + XaxisRotation * 10f,
+            ref _rotationVelocityY, _currentMoveSettings.CameraSmoothTimer);
+
+        return Quaternion.Slerp(
+            CharacterTransform.rotation,
+            Quaternion.Euler(0.0f, yRotation, 0.0f),
+            _currentMoveSettings.CharacterRotationSpeed * Time.deltaTime);
     }
     #endregion
 }

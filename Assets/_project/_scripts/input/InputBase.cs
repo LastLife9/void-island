@@ -21,7 +21,7 @@ public class InputBase : MonoBehaviour
 
         switch (_inputState)
         {
-            case InputState.MainMove:
+            case InputState.MainWalk:
                 SetEnable();
                 break;
             case InputState.MainFly:
