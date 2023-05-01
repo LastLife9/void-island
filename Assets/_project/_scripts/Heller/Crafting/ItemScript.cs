@@ -86,6 +86,7 @@ public class ItemScript
     #region useFunctions
     public void UseFromQuickAccess()
     {
+        Debug.Log("Use");
         if (itemType == ItemType.Item)
         {
             UseItem();
@@ -112,7 +113,7 @@ public class ItemScript
     }
     void UseBuilding()
     {
-
+        HouseBuildingSystem.instance.SelectBuildingFromItem(name);
     }
     void UseItem()
     {

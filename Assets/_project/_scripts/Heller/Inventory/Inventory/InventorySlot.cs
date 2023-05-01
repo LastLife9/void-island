@@ -35,9 +35,6 @@ public class InventorySlot : MonoBehaviour
 	// Called when the item is pressed
 	public void UseItem()
 	{
-		if (item != null)
-		{
-			item.MoveItem();
-		}
+		item?.MoveItem();
 	}
 }

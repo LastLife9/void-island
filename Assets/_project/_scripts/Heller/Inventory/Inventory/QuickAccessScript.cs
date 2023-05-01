@@ -53,6 +53,7 @@ public class QuickAccessScript : MonoBehaviour
             btnNumber = 0;
         }
         button = btns[btnNumber];
+        Debug.Log("button:" + button.name);
         btnNumber++;
         return button;
     }

@@ -109,29 +109,29 @@ public class HouseBuildingSystem : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1)) SelectBuildingSystemPartSO(buildingSystemPartSOList[0]);
-        if (Input.GetKeyDown(KeyCode.Alpha2)) SelectBuildingSystemPartSO(buildingSystemPartSOList[1]);
-        if (Input.GetKeyDown(KeyCode.Alpha3)) SelectBuildingSystemPartSO(buildingSystemPartSOList[2]);
-        if (Input.GetKeyDown(KeyCode.Alpha4)) SelectBuildingSystemPartSO(buildingSystemPartSOList[3]);
-        if (Input.GetKeyDown(KeyCode.Alpha5)) SelectBuildingSystemPartSO(buildingSystemPartSOList[4]);
+        //if (Input.GetKeyDown(KeyCode.Alpha1)) SelectBuildingSystemPartSO(buildingSystemPartSOList[0]);
+        //if (Input.GetKeyDown(KeyCode.Alpha2)) SelectBuildingSystemPartSO(buildingSystemPartSOList[1]);
+        //if (Input.GetKeyDown(KeyCode.Alpha3)) SelectBuildingSystemPartSO(buildingSystemPartSOList[2]);
+        //if (Input.GetKeyDown(KeyCode.Alpha4)) SelectBuildingSystemPartSO(buildingSystemPartSOList[3]);
+        //if (Input.GetKeyDown(KeyCode.Alpha5)) SelectBuildingSystemPartSO(buildingSystemPartSOList[4]);
         //HandleGridSelectManual();
         HandleGridSelectAutomatic();
-        HandleTypeSelect();
+        //HandleTypeSelect();
         HandleObjectPlacement();
-        HandleDirRotation();
-        HandleDemolish();
-        if (Input.GetMouseButtonDown(1))
-        {
-            DeselectObjectType();
-        }
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            Save();
-        }
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            Load();
-        }
+        //HandleDirRotation();
+        //HandleDemolish();
+        //if (Input.GetMouseButtonDown(1))
+        //{
+        //    DeselectObjectType();
+        //}
+        //if (Input.GetKeyDown(KeyCode.O))
+        //{
+        //    Save();
+        //}
+        //if (Input.GetKeyDown(KeyCode.P))
+        //{
+        //    Load();
+        //}
     }
     #region UpdatedFunc
     public BuildingSystemPartSO GetPlacedObjectTypeSOFromName(string placedObjectTypeSOName)
@@ -165,6 +165,17 @@ public class HouseBuildingSystem : MonoBehaviour
     }
     #endregion
     #region functionalCode
+    public void SelectBuildingFromItem(string itemName)
+    {
+        for(int i = 0; i < buildingSystemPartSOList.Count; i++)
+        {
+            if (buildingSystemPartSOList[i].nameString == itemName)
+            {
+                SelectBuildingSystemPartSO(buildingSystemPartSOList[i]);
+                return;
+            }
+        }        
+    }
     private void HandleGridSelectAutomatic()
     {
         Vector3 mousePosition = Mouse3D.GetMouseWorldPosition();
@@ -288,13 +299,14 @@ public class HouseBuildingSystem : MonoBehaviour
     #region rewrite
     private void HandleObjectPlacement()
     {
-        if (!UtilsClass.IsPointerOverUI() && buildingSystemPartSO != null && Input.GetMouseButton(0))
+        if (/*!UtilsClass.IsPointerOverUI()&&*/  buildingSystemPartSO != null && Input.GetMouseButton(0))
         {
             Debug.Log(buildingSystemPartSO.name);
             Vector3 mousePosition = Mouse3D.GetMouseWorldPosition();
             float maxBuildDistance = 10f;
             if (Vector3.Distance(playerTransform.position, mousePosition) < maxBuildDistance)
             {
+                Debug.Log(1);
                 if (buildingSystemPartType == BuildingSystemPartType.BaseObject)
                 {
                     selectedGrid.GetXZ(mousePosition, out int x, out int z);
@@ -307,9 +319,11 @@ public class HouseBuildingSystem : MonoBehaviour
                 }
                 if (buildingSystemPartType == BuildingSystemPartType.EdgeObject)
                 {
+                    Debug.Log(2);
                     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                     if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f, objectEdgeColliderLayerMask))
                     {
+                        Debug.Log(3);
                         // Raycast Hit Edge Object
                         if (raycastHit.collider.TryGetComponent(out FloorEdgePosition floorEdgePosition))
                         {
