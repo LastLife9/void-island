@@ -256,6 +256,47 @@ public class PlayerMove : MonoBehaviour
     {
         return Mathf.Sqrt(2 * jumpHeight * gravity);
     }
+    private float ClampAngle(float angle, float min, float max)
+    {
+        angle = Mathf.Repeat(angle, 360);
+        min = Mathf.Repeat(min, 360);
+        max = Mathf.Repeat(max, 360);
+        bool inverse = false;
+        var tmin = min;
+        var tangle = angle;
+        if (min > 180)
+        {
+            inverse = !inverse;
+            tmin -= 180;
+        }
+        if (angle > 180)
+        {
+            inverse = !inverse;
+            tangle -= 180;
+        }
+        var result = !inverse ? tangle > tmin : tangle < tmin;
+        if (!result)
+            angle = min;
+
+        inverse = false;
+        tangle = angle;
+        var tmax = max;
+        if (angle > 180)
+        {
+            inverse = !inverse;
+            tangle -= 180;
+        }
+        if (max > 180)
+        {
+            inverse = !inverse;
+            tmax -= 180;
+        }
+
+        result = !inverse ? tangle < tmax : tangle > tmax;
+        if (!result)
+            angle = max;
+        return angle;
+    }
     private MoveSettings GetSettings(MoveType type)
     {
         return _moveSettingsDict[type];
@@ -292,6 +333,9 @@ public class PlayerMove : MonoBehaviour
         float XaxisRotation = _look.x;
         float YaxisRotation = _look.y;
 
+        float botClampLim = _currentMoveSettings.BottomClamp;
+        float topClampLim = _currentMoveSettings.TopClamp;
+
         float yRotation = Mathf.SmoothDampAngle(
             camTargetT.eulerAngles.y,
             camTargetT.eulerAngles.y + XaxisRotation * 10f,
@@ -300,11 +344,10 @@ public class PlayerMove : MonoBehaviour
             camTargetT.eulerAngles.x,
             camTargetT.eulerAngles.x - YaxisRotation * 10f,
             ref _rotationVelocityX, _currentMoveSettings.CameraSmoothTimer);
-        //float xRotation = Mathf.Clamp(Mathf.SmoothDampAngle(
-        //    camTargetT.eulerAngles.x,
-        //    camTargetT.eulerAngles.x - YaxisRotation * 10f,
-        //    ref _rotationVelocityX, _currentMoveSettings.CameraSmoothTimer),
-        //    _currentMoveSettings.BottomClamp, _currentMoveSettings.TopClamp);
+
+        if (xRotation < 0) xRotation = 360 + xRotation;
+
+        xRotation = ClampAngle(xRotation, botClampLim, topClampLim);
 
         return Quaternion.Euler(xRotation, yRotation, 0.0f);
     }
