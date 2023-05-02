@@ -15,12 +15,12 @@ MonoBehaviour:
   Reference: 1
   HorizontalLimits: {x: -0.3, y: 0.3}
   VerticalLimits: {x: -0.3, y: 1}
-  Speed: 10
+  Speed: 3
   SmoothSpeedMoment: 3
   JumpHeight: 0
   JumpTimeout: 0.3
   FallTimeout: 0.25
   CharacterRotationSpeed: 2
   CameraSmoothTimer: 0.2
-  TopClamp: 70
-  BottomClamp: -70
+  TopClamp: 40
+  BottomClamp: -40

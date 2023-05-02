@@ -71,7 +71,6 @@ public class PlayerMove : MonoBehaviour
     private void Update()
     {
         Move();
-        Jump();
         GroundedCheck();
     }
 
@@ -153,6 +152,7 @@ public class PlayerMove : MonoBehaviour
             case MoveType.Walk:
                 Walk();
                 CharacterWalkRotation();
+                Jump();
                 break;
             case MoveType.Fly:
                 Fly();
@@ -164,10 +164,7 @@ public class PlayerMove : MonoBehaviour
     }
     private void Fly()
     {
-        _rb.velocity = new Vector3(
-            _targetDirection.x * _currentMoveSettings.Speed * _smoothMoveVector.magnitude,
-            _rb.velocity.y,
-            _targetDirection.z * _currentMoveSettings.Speed * _smoothMoveVector.magnitude);
+        _rb.velocity = (CharacterTransform.forward + _targetDirection) * _currentMoveSettings.Speed * _smoothMoveVector.magnitude;
 
         _anim.SetFloat(_animIDRight, _smoothMoveVector.x);
         _anim.SetFloat(_animIDForward, _smoothMoveVector.z);
@@ -190,11 +187,11 @@ public class PlayerMove : MonoBehaviour
     }
     private void CharacterWalkRotation()
     {
-        CharacterTransform.rotation = CalculateSlerpYAxisRotation();
+        CharacterTransform.rotation = SlerpYAxisRotation();
     }
     private void CharacterFlyRotation()
     {
-        CharacterTransform.rotation = CalculateLookDirection();
+        CharacterTransform.rotation = SlerpLookDirection();
     }
     #endregion
 
@@ -345,13 +342,18 @@ public class PlayerMove : MonoBehaviour
             camTargetT.eulerAngles.x - YaxisRotation * 10f,
             ref _rotationVelocityX, _currentMoveSettings.CameraSmoothTimer);
 
-        if (xRotation < 0) xRotation = 360 + xRotation;
-
         xRotation = ClampAngle(xRotation, botClampLim, topClampLim);
 
         return Quaternion.Euler(xRotation, yRotation, 0.0f);
     }
-    private Quaternion CalculateSlerpYAxisRotation()
+    private Quaternion SlerpLookDirection()
+    {
+        return Quaternion.Slerp(
+            CharacterTransform.rotation,
+            CalculateLookDirection(),
+            _currentMoveSettings.CharacterRotationSpeed * Time.deltaTime);
+    }
+    private Quaternion SlerpYAxisRotation()
     {
         Transform camTargetT = CinemachineCameraTarget.transform;
 
