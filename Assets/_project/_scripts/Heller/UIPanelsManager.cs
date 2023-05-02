@@ -66,7 +66,7 @@ public class UIPanelsManager : MonoBehaviour
     public void CloseAllPanels()
     {
         mainPanel.SetActive(false);
-        playerInputState.SetState(InputState.Main);
+        playerInputState.SetState(InputState.MainWalk);
         inGameUI.SetActive(true);
         playerUI.SetActive(true);
     }
