@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e7747bdf78fa6141a2f81d16ff91e5f, type: 3}
   m_Name: door
   m_EditorClassIdentifier: 
-  nameString: door1
+  nameString: Door1
   buildingSystemPartType: 1
   prefab: {fileID: 8725143178989618777, guid: ca6e2f6f6f31a98498064907190226d6, type: 3}
   visual: {fileID: 7682945440668052583, guid: 93214f94404d5b94b9f078ff410fd59b, type: 3}
