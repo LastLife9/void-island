@@ -172,7 +172,7 @@ GameObject:
   - component: {fileID: 103378954}
   - component: {fileID: 103378953}
   m_Layer: 0
-  m_Name: InputCanvas
+  m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1203,11 +1203,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &672495478 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3980406075376065656, guid: 0a0179a7523a4414a982055b359622f2, type: 3}
-  m_PrefabInstance: {fileID: 1899640872}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &696338486
 GameObject:
   m_ObjectHideFlags: 0
@@ -2289,6 +2284,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1012776286985970044, guid: 0a0179a7523a4414a982055b359622f2, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.475
+      objectReference: {fileID: 0}
+    - target: {fileID: 1012776286985970044, guid: 0a0179a7523a4414a982055b359622f2, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -3.1
+      objectReference: {fileID: 0}
     - target: {fileID: 2321160962569676387, guid: 0a0179a7523a4414a982055b359622f2, type: 3}
       propertyPath: flySettings.Speed
       value: 4
@@ -2380,7 +2383,7 @@ PrefabInstance:
     - target: {fileID: 2321160962569676387, guid: 0a0179a7523a4414a982055b359622f2, type: 3}
       propertyPath: walkSettings.CinemachineCameraTarget
       value: 
-      objectReference: {fileID: 672495478}
+      objectReference: {fileID: 0}
     - target: {fileID: 2815043594463091076, guid: 0a0179a7523a4414a982055b359622f2, type: 3}
       propertyPath: m_Name
       value: Player
@@ -2429,17 +2432,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4082404328396020771, guid: 0a0179a7523a4414a982055b359622f2, type: 3}
+      propertyPath: field of view
+      value: 55
+      objectReference: {fileID: 0}
     - target: {fileID: 4082404328396020772, guid: 0a0179a7523a4414a982055b359622f2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4082404328396020772, guid: 0a0179a7523a4414a982055b359622f2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.375
+      value: 2.475
       objectReference: {fileID: 0}
     - target: {fileID: 4082404328396020772, guid: 0a0179a7523a4414a982055b359622f2, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -4
+      value: -3.1
       objectReference: {fileID: 0}
     - target: {fileID: 4082404328396020772, guid: 0a0179a7523a4414a982055b359622f2, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2464,6 +2471,10 @@ PrefabInstance:
     - target: {fileID: 6357482199158748939, guid: 0a0179a7523a4414a982055b359622f2, type: 3}
       propertyPath: m_LocalPosition.z
       value: -4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8638091914969134416, guid: 0a0179a7523a4414a982055b359622f2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0a0179a7523a4414a982055b359622f2, type: 3}

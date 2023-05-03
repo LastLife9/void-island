@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -10,7 +11,9 @@ public class PlayerMove : MonoBehaviour
 
     [Header("CameraBase")]
     public Transform CharacterTransform;
-    public GameObject CinemachineCameraTarget;
+    public GameObject cam_Walk;
+    public GameObject cam_Fly;
+    public Transform camRoot;
 
     private List<MoveSettings> _moveSettings = new List<MoveSettings>();
     private Dictionary<MoveType, MoveSettings> _moveSettingsDict;
@@ -45,6 +48,7 @@ public class PlayerMove : MonoBehaviour
     private int _animIDJump;
     private int _animIDFreeFall;
     private int _animIDMotionSpeed;
+    private int _animIDFly;
 
 
     #region MonoBehaviourFunctions
@@ -54,6 +58,7 @@ public class PlayerMove : MonoBehaviour
         _inputState = GetComponent<PlayerInputState>();
         _anim = GetComponentInChildren<Animator>();
         _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+        Application.targetFrameRate = 60;
     }
 
     private void Start()
@@ -62,7 +67,7 @@ public class PlayerMove : MonoBehaviour
         AssembleResources();
 
         //change settings automatically in upd, based on move type
-        _currentMoveSettings = GetSettings(_moveType);
+        MoveStateChange(MoveType.Walk);
 
         _jumpTimeoutDelta = _currentMoveSettings.JumpTimeout;
         _fallTimeoutDelta = _currentMoveSettings.FallTimeout;
@@ -88,6 +93,7 @@ public class PlayerMove : MonoBehaviour
         _animIDRight = Animator.StringToHash("Right");
         _animIDGrounded = Animator.StringToHash("Grounded");
         _animIDJump = Animator.StringToHash("Jump");
+        _animIDFly = Animator.StringToHash("Fly");
         _animIDFreeFall = Animator.StringToHash("FreeFall");
         _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
     }
@@ -157,6 +163,10 @@ public class PlayerMove : MonoBehaviour
             case MoveType.Fly:
                 Fly();
                 CharacterFlyRotation();
+                if (_isGround)
+                {
+                    MoveStateChange(MoveType.Walk);
+                }
                 break;
             default:
                 break;
@@ -183,7 +193,7 @@ public class PlayerMove : MonoBehaviour
     }
     private void CameraRotation()
     {
-        CinemachineCameraTarget.transform.rotation = _lookDirection;
+        camRoot.transform.rotation = _lookDirection;
     }
     private void CharacterWalkRotation()
     {
@@ -222,16 +232,35 @@ public class PlayerMove : MonoBehaviour
         switch (state)
         {
             case MoveType.Walk:
-                _moveType = MoveType.Walk;
-                _inputState.SetState(InputState.MainWalk);
+                StartWalking();
                 break;
             case MoveType.Fly:
-                _moveType = MoveType.Fly;
-                _inputState.SetState(InputState.MainFly);
+                StartCoroutine(StartFlying());
                 break;
             default:
                 break;
         }
+    }
+    private void StartWalking()
+    {
+        _anim.SetBool(_animIDFly, false);
+        _moveType = MoveType.Walk;
+        _inputState.SetState(InputState.MainWalk);
+        ChangeCam(cam_Walk);
+
+        _currentMoveSettings = GetSettings(_moveType);
+    }
+    private IEnumerator StartFlying()
+    {
+        _jump = true;
+        ChangeCam(cam_Fly);
+
+        yield return new WaitForSeconds(_currentMoveSettings.JumpTimeout);
+
+        _anim.SetBool(_animIDFly, true);
+        _moveType = MoveType.Fly;
+        _inputState.SetState(InputState.MainFly);
+        _jump = false;
 
         _currentMoveSettings = GetSettings(_moveType);
     }
@@ -239,6 +268,13 @@ public class PlayerMove : MonoBehaviour
 
 
     #region Utility
+    private void ChangeCam(GameObject camToActivate)
+    {
+        cam_Walk.SetActive(false);
+        cam_Walk.SetActive(false);
+
+        camToActivate.SetActive(true);
+    }
     private void GroundedCheck()
     {
         Vector3 spherePosition = transform.position;
@@ -325,7 +361,7 @@ public class PlayerMove : MonoBehaviour
     }
     private Quaternion CalculateLookDirection()
     {
-        Transform camTargetT = CinemachineCameraTarget.transform;
+        Transform camTargetT = camRoot;
 
         float XaxisRotation = _look.x;
         float YaxisRotation = _look.y;
@@ -355,7 +391,7 @@ public class PlayerMove : MonoBehaviour
     }
     private Quaternion SlerpYAxisRotation()
     {
-        Transform camTargetT = CinemachineCameraTarget.transform;
+        Transform camTargetT = camRoot;
 
         float XaxisRotation = _look.x;
 

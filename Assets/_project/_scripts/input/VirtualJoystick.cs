@@ -29,6 +29,12 @@ public class VirtualJoystick : InputBase, IPointerDownHandler, IDragHandler, IPo
     protected override void OnDisable()
     {
         base.OnDisable();
+        OutputPointerEventValue(Vector2.zero);
+
+        if (handleRect.gameObject.activeSelf)
+        {
+            UpdateHandleRectPosition(Vector2.zero);
+        }
         PlayerInputState.OnStateChange -= OnInputStateChange;
     }
 
