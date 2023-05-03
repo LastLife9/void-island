@@ -79,10 +79,10 @@ public class ItemScript
         }
         PlayerPrefs.SetInt(name + "State", 0);
     }
-    public void RemoveFromInventory()
-    {
-        //Inventory.instance.Remove(this);
-    }
+    //public void RemoveFromInventory()
+    //{
+    //    //Inventory.instance.Remove(this);
+    //}
     #region useFunctions
     public void UseFromQuickAccess()
     {
@@ -141,9 +141,15 @@ public class ItemScript
         }
         EquipArmor();
     }
-    protected virtual void EquipArmor()
+    public virtual void EquipArmor()
     {
-        //EquipmentManager.instance.
+        UpdateItem(ItemState.Equiped);
+        Inventory.instance.UpdateInventory(this);
+    }
+    public virtual void UnequipArmor()
+    {
+        UpdateItem(ItemState.Inventory);
+        Inventory.instance.UpdateInventory(this);
     }
     void EquipItemToQuickAccess()
     {

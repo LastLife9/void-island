@@ -72,11 +72,13 @@ public class HouseBuildingSystem : MonoBehaviour
     public static HouseBuildingSystem instance { get; private set; }
     public event EventHandler OnActiveGridLevelChanged;
     public event EventHandler OnSelectedChanged;
-    public event EventHandler OnObjectPlaced;
-    [SerializeField] private Transform playerTransform;
-    [SerializeField] private LayerMask objectEdgeColliderLayerMask;
-    [SerializeField] private List<BuildingSystemPartSO> buildingSystemPartSOList = null;
-    [SerializeField] private TextMeshProUGUI textMeshPro;
+    //public event EventHandler OnObjectPlaced;
+    public float maxBuildDistance = 10f;
+    [SerializeField] Transform playerTransform;
+    [SerializeField] LayerMask objectEdgeColliderLayerMask;
+    [SerializeField] List<BuildingSystemPartSO> buildingSystemPartSOList = null;
+    [SerializeField] TextMeshProUGUI textMeshPro;
+    Vector3 mousePosition = Vector3.zero;
     private BuildingSystemPartSO buildingSystemPartSO;
     private float looseObjectEulerY;
     private List<GridXZ<GridObject>> gridList;
@@ -88,7 +90,7 @@ public class HouseBuildingSystem : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        Application.targetFrameRate = 100;
+        //Application.targetFrameRate = 100;
         int gridWidth = 100;
         int gridHeight = 100;
         float cellSize = 1f;
@@ -117,7 +119,7 @@ public class HouseBuildingSystem : MonoBehaviour
         //HandleGridSelectManual();
         HandleGridSelectAutomatic();
         //HandleTypeSelect();
-        HandleObjectPlacement();
+        //HandleObjectPlacement();
         //HandleDirRotation();
         //HandleDemolish();
         //if (Input.GetMouseButtonDown(1))
@@ -165,6 +167,10 @@ public class HouseBuildingSystem : MonoBehaviour
     }
     #endregion
     #region functionalCode
+    public void AcceptBuilding()
+    {
+        HandleObjectPlacement(true);
+    }
     public void SelectBuildingFromItem(string itemName)
     {
         for(int i = 0; i < buildingSystemPartSOList.Count; i++)
@@ -295,35 +301,42 @@ public class HouseBuildingSystem : MonoBehaviour
         }
         return mousePosition;
     }
+    private bool IsInRange(Vector3 mousePosition)
+    {
+        if(mousePosition == Vector3.zero)
+        {
+            return false;
+        }
+        return Vector3.Distance(playerTransform.position, mousePosition) < maxBuildDistance;
+    }
     #endregion
     #region rewrite
-    private void HandleObjectPlacement()
+    public bool HandleObjectPlacement(bool isBuildProccess)
     {
-        if (/*!UtilsClass.IsPointerOverUI()&&*/  buildingSystemPartSO != null && Input.GetMouseButton(0))
+        if (buildingSystemPartSO != null /*&& !UtilsClass.IsPointerOverUI() &&  Input.GetMouseButton(0) */ )
         {
-            Debug.Log(buildingSystemPartSO.name);
-            Vector3 mousePosition = Mouse3D.GetMouseWorldPosition();
-            float maxBuildDistance = 10f;
-            if (Vector3.Distance(playerTransform.position, mousePosition) < maxBuildDistance)
+            if(!isBuildProccess)
             {
-                Debug.Log(1);
+                mousePosition = Mouse3D.GetMouseWorldPosition();
+            }
+            if (IsInRange(mousePosition))
+            {
                 if (buildingSystemPartType == BuildingSystemPartType.BaseObject)
                 {
                     selectedGrid.GetXZ(mousePosition, out int x, out int z);
                     Vector2Int placedObjectOrigin = new Vector2Int(x, z);
-                    if (TryPlaceObject(placedObjectOrigin, buildingSystemPartSO, dir, out PlacedObject placedObject))
+                    if (TryPlaceObject(isBuildProccess, placedObjectOrigin, buildingSystemPartSO, dir, out PlacedObject placedObject))
                     {
+                        return true;
                         // Object placed
                     }
-                    return;
+                    return false;
                 }
                 if (buildingSystemPartType == BuildingSystemPartType.EdgeObject)
                 {
-                    Debug.Log(2);
-                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    Ray ray = Camera.main.ScreenPointToRay(/*Input.mousePosition*/mousePosition);
                     if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f, objectEdgeColliderLayerMask))
                     {
-                        Debug.Log(3);
                         // Raycast Hit Edge Object
                         if (raycastHit.collider.TryGetComponent(out FloorEdgePosition floorEdgePosition))
                         {
@@ -331,13 +344,19 @@ public class HouseBuildingSystem : MonoBehaviour
                             {
                                 // Found parent FloorPlacedObject
                                 // Place Object on Edge
-                                floorPlacedObject.PlaceEdge(floorEdgePosition.edge, buildingSystemPartSO);
+                                if(isBuildProccess)
+                                {
+                                    floorPlacedObject.PlaceEdge(floorEdgePosition.edge, buildingSystemPartSO);
+                                }
+                                return true;
                             }
                         }
                     }
-                    return;
+                    return false;
                 }
+                return false;
             }
+            //return false;
             //if (buildingSystemPartType == BuildingSystemPartType.LooseObject)
             //{
             //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -350,26 +369,27 @@ public class HouseBuildingSystem : MonoBehaviour
             //    return;
             //}
         }
+        return false;
     }  
     #endregion
     #region NeedFutureUpdates
-    public bool TryPlaceObject(int x, int y, BuildingSystemPartSO placedObjectTypeSO, BuildingSystemPartSO.Dir dir)
+    public bool TryPlaceObject(bool buildingProccess, int x, int y, BuildingSystemPartSO placedObjectTypeSO, BuildingSystemPartSO.Dir dir)
     {
-        return TryPlaceObject(new Vector2Int(x, y), placedObjectTypeSO, dir, out PlacedObject placedObject);
+        return TryPlaceObject(buildingProccess, new Vector2Int(x, y), placedObjectTypeSO, dir, out PlacedObject placedObject);
     }
-    public bool TryPlaceObject(Vector2Int placedObjectOrigin, BuildingSystemPartSO placedObjectTypeSO, BuildingSystemPartSO.Dir dir)
+    public bool TryPlaceObject(bool buildingProccess, Vector2Int placedObjectOrigin, BuildingSystemPartSO placedObjectTypeSO, BuildingSystemPartSO.Dir dir)
     {
-        return TryPlaceObject(placedObjectOrigin, placedObjectTypeSO, dir, out PlacedObject placedObject);
+        return TryPlaceObject(buildingProccess, placedObjectOrigin, placedObjectTypeSO, dir, out PlacedObject placedObject);
     }
-    public bool TryPlaceObject(Vector2Int placedObjectOrigin, BuildingSystemPartSO placedObjectTypeSO, BuildingSystemPartSO.Dir dir, out PlacedObject placedObject)
+    public bool TryPlaceObject(bool buildingProccess, Vector2Int placedObjectOrigin, BuildingSystemPartSO placedObjectTypeSO, BuildingSystemPartSO.Dir dir, out PlacedObject placedObject)
     {
-        return TryPlaceObject(selectedGrid, placedObjectOrigin, placedObjectTypeSO, dir, out placedObject);
+        return TryPlaceObject(buildingProccess, selectedGrid, placedObjectOrigin, placedObjectTypeSO, dir, out placedObject);
     }
-    public bool TryPlaceObject(GridXZ<GridObject> grid, Vector2Int placedObjectOrigin, BuildingSystemPartSO placedObjectTypeSO, BuildingSystemPartSO.Dir dir)
+    public bool TryPlaceObject(bool buildingProccess, GridXZ<GridObject> grid, Vector2Int placedObjectOrigin, BuildingSystemPartSO placedObjectTypeSO, BuildingSystemPartSO.Dir dir)
     {
-        return TryPlaceObject(grid, placedObjectOrigin, placedObjectTypeSO, dir, out PlacedObject placedObject);
+        return TryPlaceObject(buildingProccess, grid, placedObjectOrigin, placedObjectTypeSO, dir, out PlacedObject placedObject);
     }
-    public bool TryPlaceObject(GridXZ<GridObject> grid, Vector2Int placedObjectOrigin, BuildingSystemPartSO placedObjectTypeSO, BuildingSystemPartSO.Dir dir, out PlacedObject placedObject)
+    public bool TryPlaceObject(bool buildingProccess, GridXZ<GridObject> grid, Vector2Int placedObjectOrigin, BuildingSystemPartSO placedObjectTypeSO, BuildingSystemPartSO.Dir dir, out PlacedObject placedObject)
     {
         // Test Can Build
         List<Vector2Int> gridPositionList = placedObjectTypeSO.GetGridPositionList(placedObjectOrigin, dir);
@@ -392,15 +412,20 @@ public class HouseBuildingSystem : MonoBehaviour
         }
         if (canBuild)
         {
-            Vector2Int rotationOffset = placedObjectTypeSO.GetRotationOffset(dir);
-            Vector3 placedObjectWorldPosition = grid.GetWorldPosition(placedObjectOrigin.x, placedObjectOrigin.y) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * grid.GetCellSize();
-            placedObject = PlacedObject.Create(placedObjectWorldPosition, placedObjectOrigin, dir, placedObjectTypeSO);
-            foreach (Vector2Int gridPosition in gridPositionList)
+            placedObject = null;
+            if (buildingProccess)
             {
-                grid.GetGridObject(gridPosition.x, gridPosition.y).SetPlacedObject(placedObject);
+                Vector2Int rotationOffset = placedObjectTypeSO.GetRotationOffset(dir);
+                Vector3 placedObjectWorldPosition = grid.GetWorldPosition(placedObjectOrigin.x, placedObjectOrigin.y) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * grid.GetCellSize();
+                placedObject = PlacedObject.Create(placedObjectWorldPosition, placedObjectOrigin, dir, placedObjectTypeSO);
+                foreach (Vector2Int gridPosition in gridPositionList)
+                {
+                    grid.GetGridObject(gridPosition.x, gridPosition.y).SetPlacedObject(placedObject);
+                }
+                placedObject.GridSetupDone();
+                return true;
             }
-            placedObject.GridSetupDone();
-            OnObjectPlaced?.Invoke(placedObject, EventArgs.Empty);
+            //OnObjectPlaced?.Invoke(placedObject, EventArgs.Empty);
             return true;
         }
         // Cannot build here
@@ -486,7 +511,7 @@ public class HouseBuildingSystem : MonoBehaviour
                 foreach (PlacedObject.SaveObject placedObjectSaveObject in saveObject.placedObjectSaveObjectArrayArray[i].placedObjectSaveObjectArray)
                 {
                     BuildingSystemPartSO placedObjectTypeSO = GetPlacedObjectTypeSOFromName(placedObjectSaveObject.placedObjectTypeSOName);
-                    TryPlaceObject(grid, placedObjectSaveObject.origin, placedObjectTypeSO, placedObjectSaveObject.dir, out PlacedObject placedObject);
+                    TryPlaceObject(true, grid, placedObjectSaveObject.origin, placedObjectTypeSO, placedObjectSaveObject.dir, out PlacedObject placedObject);
                     if (placedObject is FloorPlacedObject)
                     {
                         FloorPlacedObject floorPlacedObject = (FloorPlacedObject)placedObject;
