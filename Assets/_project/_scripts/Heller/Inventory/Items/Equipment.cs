@@ -1,5 +1,5 @@
 using UnityEngine;
-public enum EquipmentSlot { Head, Chest, Legs, Weapon, Shield, Feet }
+public enum EquipmentSlot { Head, Chest, Legs, Feet, Weapon, Shield }
 /* An Item that can be equipped. */
 [CreateAssetMenu(fileName = "New Equipment", menuName = "Equipment")]
 public class Equipment : Item

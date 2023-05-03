@@ -1,3 +1,4 @@
+using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 /* Keep track of equipment. Has functions for adding and removing items. */
 public class EquipmentManager : MonoBehaviour
@@ -9,21 +10,21 @@ public class EquipmentManager : MonoBehaviour
 		instance = this;
 	}
 	#endregion
-	public enum MeshBlendShape { Head, Torso, Pants, Legs };
-	public EquipmentScript[] defaultEquipment;
-	EquipmentScript[] currentEquipment;   // Items we currently have equipped
+	//public enum MeshBlendShape { Head, Torso, Pants, Legs };
+	[SerializeField] Equipment[] defaultEquipment;
+	EquipmentScript[] currentEquipment = new EquipmentScript[6];   // Items we currently have equipped
 	// Callback for when an item is equipped/unequipped
 	public delegate void OnEquipmentChanged(EquipmentScript newItem, EquipmentScript oldItem);
 	public OnEquipmentChanged onEquipmentChanged;
 	Inventory inventory;    // Reference to our inventory
+	ItemsManager itemsManager;
 	void Start()
 	{
 		inventory = Inventory.instance;     // Get a reference to our inventory
+		itemsManager = ItemsManager.instance;
 		// Initialize currentEquipment based on number of equipment slots
-		int numSlots = System.Enum.GetNames(typeof(EquipmentSlot)).Length;
-		currentEquipment = new EquipmentScript[numSlots];
 		//currentMeshes = new SkinnedMeshRenderer[numSlots];
-		//EquipDefaults();
+		EquipDefaults();
 	}
 	// Equip a new item
 	public void Equip(EquipmentScript newItem)
@@ -35,6 +36,7 @@ public class EquipmentManager : MonoBehaviour
 		onEquipmentChanged?.Invoke(newItem, oldItem);
 		// Insert the item into the slot
 		currentEquipment[slotIndex] = newItem;
+		PlayerPrefs.SetString("Equiped" + (int)newItem.equipSlot, newItem.name);
 		//AttachToMesh(newItem, slotIndex);
 	}
 	// Unequip an item with a particular index
@@ -46,6 +48,12 @@ public class EquipmentManager : MonoBehaviour
 		{
 			// Add the item to the inventory
 			oldItem = currentEquipment[slotIndex];
+			oldItem.UnequipArmor();
+			if (IsDefault(oldItem.name))
+			{
+				return null;
+			}
+			PlayerPrefs.SetString("Equiped" + (int)oldItem.equipSlot, "");
 			//inventory.Add(oldItem);
 			//SetBlendShapeWeight(oldItem, 0);
 			// Destroy the mesh
@@ -57,8 +65,9 @@ public class EquipmentManager : MonoBehaviour
 			currentEquipment[slotIndex] = null;
 			// EquipmentScript has been removed so we trigger the callback
 			onEquipmentChanged?.Invoke(null, oldItem);
-		}
-		return oldItem;
+        }
+		//EquipDefaults();
+        return oldItem;
 	}
 	// Unequip all items
 	public void UnequipAll()
@@ -88,17 +97,37 @@ public class EquipmentManager : MonoBehaviour
 		}
 	}
 	*/
-	//void EquipDefaults()
-	//{
-	//	foreach (EquipmentScript e in defaultEquipment)
-	//	{
-	//		Equip(e);
-	//	}
-	//}
-	void Update()
+	void EquipDefaults()
 	{
-		// Unequip all items if we press U
-		if (Input.GetKeyDown(KeyCode.U))
-			UnequipAll();
+		EquipmentScript equipmentScript = null;
+		foreach (Equipment e in defaultEquipment)
+		{
+            equipmentScript = itemsManager.GetEquipment(e.name);
+            Debug.Log(e.name);
+            Debug.Log((int)equipmentScript.equipSlot);
+			PlayerPrefs.SetString("Equiped" + (int)equipmentScript.equipSlot, "");
+            if (!PlayerPrefs.HasKey("Equiped" + (int)equipmentScript.equipSlot) || PlayerPrefs.GetString("Equiped" + (int)equipmentScript.equipSlot) == "")
+            {
+                //Equip(equipmentScript);
+				equipmentScript.EquipArmor();
+            }
+        }
 	}
+	public bool IsDefault(string equipName)
+	{
+        foreach (Equipment e in defaultEquipment)
+        {
+            if(equipName == e.name)
+			{
+				return true;
+			}
+        }
+		return false;
+    }
+	//void Update()
+	//{
+	//	// Unequip all items if we press U
+	//	if (Input.GetKeyDown(KeyCode.U))
+	//		UnequipAll();
+	//}
 }

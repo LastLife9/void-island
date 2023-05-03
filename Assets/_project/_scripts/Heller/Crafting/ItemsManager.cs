@@ -12,7 +12,9 @@ public class ItemsManager : MonoBehaviour
     #endregion
     [SerializeField] GameObject craftPanel;
     List<ItemScript> itemsScript = new List<ItemScript>();
+    List<EquipmentScript> equipmentsScript = new List<EquipmentScript>();
     public List<Item> items = new List<Item>();
+    public List<Equipment> equipments = new List<Equipment>();
     private void Start()
     {
         foreach (var itemScript in itemsScript) 
@@ -24,9 +26,18 @@ public class ItemsManager : MonoBehaviour
     {
         return itemsScript.Find(item => item.name == name);
     }
+    public EquipmentScript GetEquipment(string name)
+    {
+        return equipmentsScript.Find(item => item.name == name);
+    }
     void BuildItemDatabase()
     {
         //itemsScript = new List<ItemScript>(items.Count);
+        for (int i = 0; i < equipments.Count; i++)
+        {
+            items.Add(equipments[i]);
+            equipmentsScript.Add(new EquipmentScript(equipments[i]));
+        }
         for(int i = 0; i < items.Count; i++)
         {
             itemsScript.Add(new ItemScript(items[i]));

@@ -10,16 +10,6 @@ public class QuickAccessScript : MonoBehaviour
     {
         instance = this;
         btnNumber = 0;
-    }
-    #endregion
-    [SerializeField] Button[] btns;
-    [SerializeField] Image[] inventoryPanelImages;
-    [SerializeField] TextMeshProUGUI[] inventoryPanelCount;
-    [SerializeField] TextMeshProUGUI[] btnsCount;
-    [SerializeField] Image[] btnsImage;
-    int btnNumber = 0;
-    private void Start()
-    {
         for (int i = 0; i < btns.Length; i++)
         {
             btnsCount[i].text = "";
@@ -28,6 +18,13 @@ public class QuickAccessScript : MonoBehaviour
             inventoryPanelImages[i].enabled = false;
         }
     }
+    #endregion
+    [SerializeField] Button[] btns;
+    [SerializeField] Image[] inventoryPanelImages;
+    [SerializeField] TextMeshProUGUI[] inventoryPanelCount;
+    [SerializeField] TextMeshProUGUI[] btnsCount;
+    [SerializeField] Image[] btnsImage;
+    int btnNumber = 0;
     public void AddItemToQuickAccess(UnityAction unityAction, ItemScript itemScript)
     {
         btnsImage[btnNumber].enabled = true;
@@ -53,7 +50,6 @@ public class QuickAccessScript : MonoBehaviour
             btnNumber = 0;
         }
         button = btns[btnNumber];
-        Debug.Log("button:" + button.name);
         btnNumber++;
         return button;
     }
