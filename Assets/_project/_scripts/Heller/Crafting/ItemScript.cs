@@ -55,14 +55,13 @@ public class ItemScript
         if(count <= 0)
         {
             UpdateItem(ItemState.Null);
-            Inventory.instance.UpdateInventory(this);
-            return;
         }
         if(itemState.Equals(ItemState.Null))
         {
             UpdateItem(ItemState.Inventory);
         }
         Inventory.instance.UpdateInventory(this);
+        QuickAccessScript.instance.UpdatePanel();
     }
     void UpdateItem(ItemState state)
     {
@@ -86,7 +85,6 @@ public class ItemScript
     #region useFunctions
     public void UseFromQuickAccess()
     {
-        Debug.Log("Use");
         if (itemType == ItemType.Item)
         {
             UseItem();
@@ -117,7 +115,7 @@ public class ItemScript
     }
     void UseItem()
     {
-
+        ItemsManager.instance.GiveItem(name, 1);
     }
     void ChooseInstrumentInArms ()
     {

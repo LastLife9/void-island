@@ -1,4 +1,3 @@
-using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 /* Keep track of equipment. Has functions for adding and removing items. */
 public class EquipmentManager : MonoBehaviour
