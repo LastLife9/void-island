@@ -11,15 +11,17 @@ public class PlayerMove : MonoBehaviour
 
     [Header("CameraBase")]
     public Transform CharacterTransform;
+    public Transform camRoot;
     public GameObject cam_Walk;
     public GameObject cam_Fly;
-    public Transform camRoot;
 
     private List<MoveSettings> _moveSettings = new List<MoveSettings>();
     private Dictionary<MoveType, MoveSettings> _moveSettingsDict;
     private MoveSettings _currentMoveSettings;
     private PlayerInputState _inputState;
+
     private MoveType _moveType = MoveType.Walk;
+    private MoveType _prevMoveType;
 
     private Rigidbody _rb;
     private Animator _anim;
@@ -35,7 +37,6 @@ public class PlayerMove : MonoBehaviour
 
     private bool _isGround = false;
     private bool _jump = false;
-    private bool _fly = false;
 
     private float _rotationVelocityX;
     private float _rotationVelocityY;
@@ -219,17 +220,28 @@ public class PlayerMove : MonoBehaviour
     {
         _jump = true;
     }
-    public void VirtualFlyInput()
+    public void MoveStateChange(MoveType state)
     {
-        MoveStateChange(MoveType.Fly);
-    }
-    public void VirtualWalkInput()
-    {
-        MoveStateChange(MoveType.Walk);
-    }
-    private void MoveStateChange(MoveType state)
-    {
+        if (!state.Equals(_moveType))
+        {
+            _prevMoveType = _moveType;
+        }
+
         switch (state)
+        {
+            case MoveType.Walk:
+                StartWalking();
+                break;
+            case MoveType.Fly:
+                StartCoroutine(StartFlying());
+                break;
+            default:
+                break;
+        }
+    }
+    public void SetPreviusMoveState()
+    {
+        switch (_prevMoveType)
         {
             case MoveType.Walk:
                 StartWalking();
@@ -243,25 +255,24 @@ public class PlayerMove : MonoBehaviour
     }
     private void StartWalking()
     {
-        _anim.SetBool(_animIDFly, false);
-        _moveType = MoveType.Walk;
-        _inputState.SetState(InputState.MainWalk);
         ChangeCam(cam_Walk);
 
+        _anim.SetBool(_animIDFly, false);
+        _inputState.SetState(InputState.MainWalk);
+        _moveType = MoveType.Walk;
         _currentMoveSettings = GetSettings(_moveType);
     }
     private IEnumerator StartFlying()
     {
-        _jump = true;
         ChangeCam(cam_Fly);
+        _jump = true;
 
         yield return new WaitForSeconds(_currentMoveSettings.JumpTimeout);
 
         _anim.SetBool(_animIDFly, true);
-        _moveType = MoveType.Fly;
         _inputState.SetState(InputState.MainFly);
+        _moveType = MoveType.Fly;
         _jump = false;
-
         _currentMoveSettings = GetSettings(_moveType);
     }
     #endregion
@@ -271,7 +282,7 @@ public class PlayerMove : MonoBehaviour
     private void ChangeCam(GameObject camToActivate)
     {
         cam_Walk.SetActive(false);
-        cam_Walk.SetActive(false);
+        cam_Fly.SetActive(false);
 
         camToActivate.SetActive(true);
     }
@@ -405,5 +416,6 @@ public class PlayerMove : MonoBehaviour
             Quaternion.Euler(0.0f, yRotation, 0.0f),
             _currentMoveSettings.CharacterRotationSpeed * Time.deltaTime);
     }
+    public MoveType GetMoveType() => _moveType;
     #endregion
 }
