@@ -316,7 +316,7 @@ public class HouseBuildingSystem : MonoBehaviour
     {
         if (buildingSystemPartSO != null /*&& !UtilsClass.IsPointerOverUI() &&  Input.GetMouseButton(0) */ )
         {
-            if(!isBuildProccess)
+            //if(!isBuildProccess)
             {
                 mousePosition = Mouse3D.GetMouseWorldPosition();
             }
@@ -405,8 +405,8 @@ public class HouseBuildingSystem : MonoBehaviour
         bool canBuild = true;
         foreach (Vector2Int gridPosition in gridPositionList)
         {
-            //bool isValidPosition = grid.IsValidGridPositionWithPadding(gridPosition);
-            bool isValidPosition = grid.IsValidGridPosition(gridPosition);
+            bool isValidPosition = grid.IsValidGridPositionWithPadding(gridPosition);
+            //bool isValidPosition = grid.IsValidGridPosition(gridPosition);
             if (!isValidPosition)
             {
                 // Not valid

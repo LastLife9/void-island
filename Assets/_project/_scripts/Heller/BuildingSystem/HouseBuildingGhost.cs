@@ -32,13 +32,11 @@ public class HouseBuildingGhost : MonoBehaviour
             FloorEdgePosition floorEdgePosition = houseBuildingSystem.GetMouseFloorEdgePosition();
             if (floorEdgePosition != null)
             {
-                transform.position = Vector3.Lerp(transform.position, floorEdgePosition.transform.position, Time.deltaTime * 15f);
-                transform.rotation = Quaternion.Lerp(transform.rotation, floorEdgePosition.transform.rotation, Time.deltaTime * 25f);
+                transform.SetPositionAndRotation(Vector3.Lerp(transform.position, floorEdgePosition.transform.position, Time.deltaTime * 15f), Quaternion.Lerp(transform.rotation, floorEdgePosition.transform.rotation, Time.deltaTime * 25f));
                 return;
             }
             targetPosition = houseBuildingSystem.GetMouseWorldSnappedPosition();
-            transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * 15f);
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, Time.deltaTime * 25f);
+            transform.SetPositionAndRotation(Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * 15f), Quaternion.Lerp(transform.rotation, Quaternion.identity, Time.deltaTime * 25f));
             return;
         }
         //if (houseBuildingSystem.GetPlaceObjectType() == BuildingSystemPartType.LooseObject)
@@ -55,8 +53,7 @@ public class HouseBuildingGhost : MonoBehaviour
         {
             targetPosition = houseBuildingSystem.GetMouseWorldSnappedPosition();
             //targetPosition.y += .1f;
-            transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * 15f);
-            transform.rotation = Quaternion.Lerp(transform.rotation, houseBuildingSystem.GetPlacedObjectRotation(), Time.deltaTime * 25f);
+            transform.SetPositionAndRotation(Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * 15f), Quaternion.Lerp(transform.rotation, houseBuildingSystem.GetPlacedObjectRotation(), Time.deltaTime * 25f));
             return;
         }
     }

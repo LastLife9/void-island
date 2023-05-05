@@ -139,10 +139,12 @@ public class GridXZ<TGridObject>
 
         if (x >= 0 && z >= 0 && x < width && z < height)
         {
+            Debug.Log("ValidGridPOs");
             return true;
         }
         else
         {
+            Debug.Log("NotValidGridPOs");
             return false;
         }
     }
