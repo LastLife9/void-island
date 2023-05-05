@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -17,6 +18,7 @@ public class QuickAccessScript : MonoBehaviour
             btnsImage[i].enabled = false;
             inventoryPanelImages[i].enabled = false;
         }
+        itemScripts = new ItemScript[btns.Length];
     }
     #endregion
     [SerializeField] Button[] btns;
@@ -24,6 +26,7 @@ public class QuickAccessScript : MonoBehaviour
     [SerializeField] TextMeshProUGUI[] inventoryPanelCount;
     [SerializeField] TextMeshProUGUI[] btnsCount;
     [SerializeField] Image[] btnsImage;
+    ItemScript[] itemScripts;
     int btnNumber = 0;
     public void AddItemToQuickAccess(UnityAction unityAction, ItemScript itemScript)
     {
@@ -33,6 +36,7 @@ public class QuickAccessScript : MonoBehaviour
         btnsCount[btnNumber].text = itemScript.count.ToString();
         inventoryPanelImages[btnNumber].sprite = itemScript.icon;
         inventoryPanelCount[btnNumber].text = itemScript.count.ToString();
+        itemScripts[btnNumber] = itemScript;
         CheckButtonsForFunctionality().onClick.AddListener(unityAction);
     }
     Button CheckButtonsForFunctionality()
@@ -51,6 +55,38 @@ public class QuickAccessScript : MonoBehaviour
         }
         button = btns[btnNumber];
         btnNumber++;
+        button.onClick.RemoveAllListeners();
         return button;
+    }
+    public void UpdatePanel()
+    {
+        for(int i = 0; i< btns.Length; i ++)
+        {
+            if (itemScripts[i] != null)
+            {
+                if(itemScripts[i].count <= 0)
+                {
+                    ClearPanelSlot(i);
+                    continue;
+                }
+                ChangeCounter(i);
+            }
+        }
+    }
+    void ClearPanelSlot(int number)
+    {
+        btnsImage[number].enabled = false;
+        inventoryPanelImages[number].enabled = false;
+        btnsImage[number].sprite = null;
+        btnsCount[number].text = "";
+        inventoryPanelImages[number].sprite = null;
+        inventoryPanelCount[number].text = "";
+        itemScripts[number] = null;
+        btns[number].onClick.RemoveAllListeners();
+    }
+    void ChangeCounter(int number)
+    {
+        btnsCount[number].text = itemScripts[number].count.ToString();
+        inventoryPanelCount[number].text = itemScripts[number].count.ToString();
     }
 }

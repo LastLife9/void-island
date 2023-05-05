@@ -1,7 +1,7 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Events;
 public class CraftRecipe : MonoBehaviour
 {
     [Header("Object")]
@@ -18,6 +18,8 @@ public class CraftRecipe : MonoBehaviour
     Item[] requiredItems;
     Item itemToCraft;
     bool isCanCraft = true;
+    CraftManagerScript craftManagerScript;
+    UnityAction enableCraft;
     private void Awake()
     {
         timeToCraft = recipe.timeToCraft;
@@ -25,9 +27,19 @@ public class CraftRecipe : MonoBehaviour
         itemToCraftCount = recipe.itemToCraftCount;
         requiredItems = recipe.requiredItems;
         itemToCraft = recipe.itemToCraft;
+        enableCraft = new UnityAction(EnableCraftAfterCoroutine);
+    }
+    private void Start()
+    {
+        craftManagerScript = CraftManagerScript.instance;
     }
     private void OnEnable()
     {
+        EnableCraft();
+    }
+    void EnableCraftAfterCoroutine()
+    {
+        isCanCraft = true;
         EnableCraft();
     }
     void EnableCraft()
@@ -41,12 +53,12 @@ public class CraftRecipe : MonoBehaviour
         itemToCraftImage.sprite = itemToCraft.icon;
         for (int i = 0; i < requiredItems.Length; i++)
         {
-            sliderText.text = "0 %";
+            sliderText.text = "0%";
             itemImages[i].gameObject.SetActive(true);
             requiredItemsCountText[i].gameObject.SetActive(true);
             itemImages[i].sprite = requiredItems[i].icon;
             requiredItemsCountText[i].color = Color.green;
-            requiredItemsCountText[i].text = ItemsManager.instance.GetItem(requiredItems[i].name).count + " / " + requiredItemsCount[i];
+            requiredItemsCountText[i].text = ItemsManager.instance.GetItem(requiredItems[i].name).count + "/" + requiredItemsCount[i];
             if (ItemsManager.instance.GetItem(requiredItems[i].name).count
                 < requiredItemsCount[i])
             {
@@ -63,23 +75,9 @@ public class CraftRecipe : MonoBehaviour
     {
         if(isCanCraft)
         {
-            StartCoroutine(CraftItemIE());
+            isCanCraft = false;
+            craftButton.interactable = false;
+            craftManagerScript.StartCraftItem(enableCraft, requiredItems,sliderText,slider,timeToCraft,itemToCraft,requiredItemsCount,itemToCraftCount);
         }
-    }
-    IEnumerator CraftItemIE()
-    {
-        for (int i = 0; i < requiredItems.Length; i++)
-        {
-            ItemsManager.instance.GiveItem(requiredItems[i].name, requiredItemsCount[i]);
-        }
-        for (int i = 0; i < 100; i++ )
-        {
-            sliderText.text = slider.fillAmount * 100 + " %";
-            slider.fillAmount += .05f;
-            yield return new WaitForSeconds(timeToCraft/100);
-        }
-        ItemsManager.instance.TakeItem(itemToCraft.name, itemToCraftCount);
-        slider.fillAmount = 0;
-        EnableCraft();
     }
 }

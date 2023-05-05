@@ -78,6 +78,7 @@ public class HouseBuildingSystem : MonoBehaviour
     [SerializeField] LayerMask objectEdgeColliderLayerMask;
     [SerializeField] List<BuildingSystemPartSO> buildingSystemPartSOList = null;
     [SerializeField] TextMeshProUGUI textMeshPro;
+    [SerializeField] Transform scope;
     Vector3 mousePosition = Vector3.zero;
     private BuildingSystemPartSO buildingSystemPartSO;
     private float looseObjectEulerY;
@@ -93,7 +94,7 @@ public class HouseBuildingSystem : MonoBehaviour
         //Application.targetFrameRate = 100;
         int gridWidth = 100;
         int gridHeight = 100;
-        float cellSize = 1f;
+        float cellSize = 2f;
         gridList = new List<GridXZ<GridObject>>();
         int gridVerticalCount = 5;
         float gridVerticalSize = GRID_HEIGHT;
@@ -219,7 +220,7 @@ public class HouseBuildingSystem : MonoBehaviour
     }
     private void HandleDemolish()
     {
-        if (isDemolishActive && Input.GetMouseButtonDown(0) && !UtilsClass.IsPointerOverUI())
+        if (isDemolishActive && Input.GetMouseButtonDown(0) /*&& !UtilsClass.IsPointerOverUI()*/)
         {
             Vector3 mousePosition = Mouse3D.GetMouseWorldPosition();
             PlacedObject placedObject = selectedGrid.GetGridObject(mousePosition).GetPlacedObject();
@@ -275,9 +276,9 @@ public class HouseBuildingSystem : MonoBehaviour
     }
     public FloorEdgePosition GetMouseFloorEdgePosition()
     {
-        if (!UtilsClass.IsPointerOverUI())
+        //if (!UtilsClass.IsPointerOverUI())
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Ray ray = Camera.main.ScreenPointToRay(scope.position);
             if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f, objectEdgeColliderLayerMask))
             {
                 // Raycast Hit Edge Object
@@ -334,7 +335,7 @@ public class HouseBuildingSystem : MonoBehaviour
                 }
                 if (buildingSystemPartType == BuildingSystemPartType.EdgeObject)
                 {
-                    Ray ray = Camera.main.ScreenPointToRay(/*Input.mousePosition*/mousePosition);
+                    Ray ray = Camera.main.ScreenPointToRay(/*Input.mousePosition*/scope.position);
                     if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f, objectEdgeColliderLayerMask))
                     {
                         // Raycast Hit Edge Object
@@ -371,6 +372,14 @@ public class HouseBuildingSystem : MonoBehaviour
         }
         return false;
     }  
+    void CheckIfHaveItem()
+    {
+        ItemsManager.instance.GiveItem(buildingSystemPartSO.nameString, 1);
+        if(ItemsManager.instance.GetItem(buildingSystemPartSO.nameString).count <= 0)
+        {
+            DeselectObjectType();
+        }
+    }
     #endregion
     #region NeedFutureUpdates
     public bool TryPlaceObject(bool buildingProccess, int x, int y, BuildingSystemPartSO placedObjectTypeSO, BuildingSystemPartSO.Dir dir)
@@ -422,6 +431,7 @@ public class HouseBuildingSystem : MonoBehaviour
                 {
                     grid.GetGridObject(gridPosition.x, gridPosition.y).SetPlacedObject(placedObject);
                 }
+                CheckIfHaveItem();
                 placedObject.GridSetupDone();
                 return true;
             }

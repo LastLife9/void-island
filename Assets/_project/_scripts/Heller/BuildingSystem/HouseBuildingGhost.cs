@@ -21,10 +21,10 @@ public class HouseBuildingGhost : MonoBehaviour
     }
     private void LateUpdate() 
     {
-        if(UtilsClass.IsPointerOverUI())
-        {
-            return;
-        }
+        //if(UtilsClass.IsPointerOverUI())
+        //{
+        //    return;
+        //}
         Vector3 targetPosition = Vector3.zero;
         CheckMatColor(houseBuildingSystem.HandleObjectPlacement(false));
         if (houseBuildingSystem.GetPlaceObjectType() == BuildingSystemPartType.EdgeObject)

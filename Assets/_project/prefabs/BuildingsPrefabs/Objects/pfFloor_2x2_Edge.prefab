@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8383131030035169938}
   - component: {fileID: 1928692201296294831}
   - component: {fileID: 3927812691392017798}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: pfFloor_2x2_Edge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,7 +45,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2, y: 0.5, z: 0.3}
+  m_Size: {x: 2, y: 0.2, z: 0.3}
   m_Center: {x: 1, y: 0, z: 0.15}
 --- !u!114 &3927812691392017798
 MonoBehaviour:
@@ -71,7 +71,7 @@ GameObject:
   - component: {fileID: 4932651399901498461}
   - component: {fileID: 7905737819812325736}
   - component: {fileID: 4843682274665107395}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Anchor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
