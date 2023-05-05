@@ -134,9 +134,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   CharacterTransform: {fileID: 2815043595551173054}
+  camRoot: {fileID: 3980406075376065663}
   cam_Walk: {fileID: 6357482199158748916}
   cam_Fly: {fileID: 7778171372862594209}
-  camRoot: {fileID: 3980406075376065663}
 --- !u!114 &6432565690325153868
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -167,7 +167,7 @@ MonoBehaviour:
   jetpackObj: {fileID: 8316752821188398188}
   capacitySlider: {fileID: 1750537012568346882}
   Capacity: 100
-  CapacityPerSec: 2
+  CapacityPerSec: 1
   Enable: 1
 --- !u!54 &3898104114336425514
 Rigidbody:

@@ -9,6 +9,7 @@ public class Jetpack : MonoBehaviour
 
     [SerializeField] private GameObject flyBtn;
     [SerializeField] private GameObject jetpackObj;
+
     [SerializeField] private Slider capacitySlider;
 
     public float Capacity = 100f;
