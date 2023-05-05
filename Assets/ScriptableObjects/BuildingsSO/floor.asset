@@ -16,5 +16,5 @@ MonoBehaviour:
   buildingSystemPartType: 0
   prefab: {fileID: 5851041394452845431, guid: 30e3baa7b3ff8c945b4d0f2fb87b7d81, type: 3}
   visual: {fileID: 4703353783929287350, guid: 5a2ea2fb6c37aac4b82e20e5e389a05f, type: 3}
-  width: 2
-  height: 2
+  width: 1
+  height: 1

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using CodeMonkey.Utils;
 using TMPro;
 public enum BuildingSystemPartType
 {
@@ -92,8 +91,8 @@ public class HouseBuildingSystem : MonoBehaviour
     {
         instance = this;
         //Application.targetFrameRate = 100;
-        int gridWidth = 100;
-        int gridHeight = 100;
+        int gridWidth = 300;
+        int gridHeight = 300;
         float cellSize = 2f;
         gridList = new List<GridXZ<GridObject>>();
         int gridVerticalCount = 5;
@@ -316,7 +315,7 @@ public class HouseBuildingSystem : MonoBehaviour
     {
         if (buildingSystemPartSO != null /*&& !UtilsClass.IsPointerOverUI() &&  Input.GetMouseButton(0) */ )
         {
-            //if(!isBuildProccess)
+            if(!isBuildProccess)
             {
                 mousePosition = Mouse3D.GetMouseWorldPosition();
             }
@@ -405,8 +404,8 @@ public class HouseBuildingSystem : MonoBehaviour
         bool canBuild = true;
         foreach (Vector2Int gridPosition in gridPositionList)
         {
-            bool isValidPosition = grid.IsValidGridPositionWithPadding(gridPosition);
-            //bool isValidPosition = grid.IsValidGridPosition(gridPosition);
+            //bool isValidPosition = grid.IsValidGridPositionWithPadding(gridPosition);
+            bool isValidPosition = grid.IsValidGridPosition(gridPosition);
             if (!isValidPosition)
             {
                 // Not valid

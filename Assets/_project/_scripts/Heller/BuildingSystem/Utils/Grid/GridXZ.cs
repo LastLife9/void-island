@@ -74,15 +74,15 @@ public class GridXZ<TGridObject>
         return cellSize;
     }
 
-    public Vector3 GetWorldPosition(int x, int z)
+    public Vector3 GetWorldPosition(int x, int z, int mul = 1)
     {
-        return new Vector3(x, 0, z) * cellSize + originPosition;
+        return new Vector3(x, 0, z) * cellSize * mul + originPosition;
     }
 
-    public void GetXZ(Vector3 worldPosition, out int x, out int z)
+    public void GetXZ(Vector3 worldPosition, out int x, out int z, int mul = 1)
     {
-        x = Mathf.FloorToInt((worldPosition - originPosition).x / cellSize);
-        z = Mathf.FloorToInt((worldPosition - originPosition).z / cellSize);
+        x = Mathf.FloorToInt((worldPosition - originPosition).x / cellSize * mul);
+        z = Mathf.FloorToInt((worldPosition - originPosition).z / cellSize * mul);
     }
 
     public void SetGridObject(int x, int z, TGridObject value)
@@ -136,17 +136,12 @@ public class GridXZ<TGridObject>
     {
         int x = gridPosition.x;
         int z = gridPosition.y;
-
         if (x >= 0 && z >= 0 && x < width && z < height)
         {
-            Debug.Log("ValidGridPOs");
             return true;
         }
-        else
-        {
-            Debug.Log("NotValidGridPOs");
-            return false;
-        }
+        Debug.Log(gridPosition);
+        return false;
     }
 
     public bool IsValidGridPositionWithPadding(Vector2Int gridPosition)

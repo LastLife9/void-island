@@ -102,8 +102,6 @@ public class EquipmentManager : MonoBehaviour
 		foreach (Equipment e in defaultEquipment)
 		{
             equipmentScript = itemsManager.GetEquipment(e.name);
-            Debug.Log(e.name);
-            Debug.Log((int)equipmentScript.equipSlot);
 			PlayerPrefs.SetString("Equiped" + (int)equipmentScript.equipSlot, "");
             if (!PlayerPrefs.HasKey("Equiped" + (int)equipmentScript.equipSlot) || PlayerPrefs.GetString("Equiped" + (int)equipmentScript.equipSlot) == "")
             {

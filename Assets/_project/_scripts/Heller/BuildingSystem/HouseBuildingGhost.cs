@@ -1,5 +1,4 @@
-﻿using CodeMonkey.Utils;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 public class HouseBuildingGhost : MonoBehaviour 
 {
@@ -32,6 +31,7 @@ public class HouseBuildingGhost : MonoBehaviour
             FloorEdgePosition floorEdgePosition = houseBuildingSystem.GetMouseFloorEdgePosition();
             if (floorEdgePosition != null)
             {
+                Debug.Log(floorEdgePosition.transform.position);
                 transform.SetPositionAndRotation(Vector3.Lerp(transform.position, floorEdgePosition.transform.position, Time.deltaTime * 15f), Quaternion.Lerp(transform.rotation, floorEdgePosition.transform.rotation, Time.deltaTime * 25f));
                 return;
             }
