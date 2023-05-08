@@ -6879,6 +6879,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bbbde8ad263f699479696409ec6fa136, type: 2}
   - {fileID: 11400000, guid: c62b1847cc2435741aad809facb6b18f, type: 2}
   - {fileID: 11400000, guid: 117dd512c7fb56b43a5ca6f84718db6d, type: 2}
+  - {fileID: 11400000, guid: d725aff40dc78ae409c0f9b4daeaf6d4, type: 2}
   equipments:
   - {fileID: 11400000, guid: 8e7f81f10a9877c46a944b5b3b08b464, type: 2}
   - {fileID: 11400000, guid: c405415bb851814498f4d2f11bdbbd0f, type: 2}
@@ -9115,6 +9116,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 31db1bb610e745242bea2099dc3c4397, type: 2}
   - {fileID: 11400000, guid: 70a7f70a5053b4340ab607f9091e9b54, type: 2}
   - {fileID: 11400000, guid: 65e3f90653423484ba8c82df92e6109e, type: 2}
+  - {fileID: 11400000, guid: 91a9ffb665cc68048b11721495737240, type: 2}
   textMeshPro: {fileID: 386577680}
   scope: {fileID: 208985983}
 --- !u!1001 &1734023100

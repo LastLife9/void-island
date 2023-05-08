@@ -21,8 +21,11 @@ public class ItemsManager : MonoBehaviour
         {
             Inventory.instance.UpdateInventory(itemScript);
         }
-        TakeItem("Leaf", 10);
-        TakeItem("Wood", 10);
+        //TakeItem("Leaf", 10);
+        //TakeItem("Wood", 10);
+        TakeItem("Wall1", 100);
+        TakeItem("Floor1", 100);
+        TakeItem("Stove", 100);
     }
     public ItemScript GetItem(string name)
     {

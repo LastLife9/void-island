@@ -78,6 +78,7 @@ public class HouseBuildingSystem : MonoBehaviour
     [SerializeField] List<BuildingSystemPartSO> buildingSystemPartSOList = null;
     [SerializeField] TextMeshProUGUI textMeshPro;
     [SerializeField] Transform scope;
+    List<Transform> looseObjectTransformList;
     Vector3 mousePosition = Vector3.zero;
     private BuildingSystemPartSO buildingSystemPartSO;
     private float looseObjectEulerY;
@@ -104,7 +105,9 @@ public class HouseBuildingSystem : MonoBehaviour
         }
         selectedGrid = gridList[0];
         buildingSystemPartSO = null;
-        //looseObjectTransformList = new List<Transform>();
+
+        looseObjectTransformList = new List<Transform>();
+
         //textMeshPro = transform.Find("Text").GetComponent<TextMeshProUGUI>();
         textMeshPro.text = "Grid Level " + 1;
         OnActiveGridLevelChanged += HouseBuildingSystem_OnActiveGridLevelChanged;
@@ -275,8 +278,6 @@ public class HouseBuildingSystem : MonoBehaviour
     }
     public FloorEdgePosition GetMouseFloorEdgePosition()
     {
-        //if (!UtilsClass.IsPointerOverUI())
-        {
             Ray ray = Camera.main.ScreenPointToRay(scope.position);
             if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f, objectEdgeColliderLayerMask))
             {
@@ -286,7 +287,6 @@ public class HouseBuildingSystem : MonoBehaviour
                     return floorEdgePosition;
                 }
             }
-        }
         return null;
     }
     public Vector3 GetMouseWorldSnappedPosition()
@@ -297,6 +297,19 @@ public class HouseBuildingSystem : MonoBehaviour
         {
             Vector2Int rotationOffset = buildingSystemPartSO.GetRotationOffset(dir);
             Vector3 placedObjectWorldPosition = selectedGrid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * selectedGrid.GetCellSize();
+            return placedObjectWorldPosition;
+        }
+        return mousePosition;
+    }
+    public Vector3 GetMouseWorldSnappedPositionLoose()
+    {
+        Vector3 mousePosition = Mouse3D.GetMouseWorldPosition();
+        selectedGrid.GetXZ(mousePosition, out int x, out int z);
+        if (buildingSystemPartSO != null)
+        {
+            Vector2Int rotationOffset = buildingSystemPartSO.GetRotationOffset(dir);
+            Vector3 placedObjectWorldPosition = selectedGrid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * selectedGrid.GetCellSize();
+            placedObjectWorldPosition.y = mousePosition.y;
             return placedObjectWorldPosition;
         }
         return mousePosition;
@@ -313,7 +326,7 @@ public class HouseBuildingSystem : MonoBehaviour
     #region rewrite
     public bool HandleObjectPlacement(bool isBuildProccess)
     {
-        if (buildingSystemPartSO != null /*&& !UtilsClass.IsPointerOverUI() &&  Input.GetMouseButton(0) */ )
+        if (buildingSystemPartSO != null)
         {
             if(!isBuildProccess)
             {
@@ -330,11 +343,10 @@ public class HouseBuildingSystem : MonoBehaviour
                         return true;
                         // Object placed
                     }
-                    return false;
                 }
                 if (buildingSystemPartType == BuildingSystemPartType.EdgeObject)
                 {
-                    Ray ray = Camera.main.ScreenPointToRay(/*Input.mousePosition*/scope.position);
+                    Ray ray = Camera.main.ScreenPointToRay(scope.position);
                     if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f, objectEdgeColliderLayerMask))
                     {
                         // Raycast Hit Edge Object
@@ -344,7 +356,7 @@ public class HouseBuildingSystem : MonoBehaviour
                             {
                                 // Found parent FloorPlacedObject
                                 // Place Object on Edge
-                                if(isBuildProccess)
+                                if (isBuildProccess)
                                 {
                                     floorPlacedObject.PlaceEdge(floorEdgePosition.edge, buildingSystemPartSO);
                                 }
@@ -352,22 +364,25 @@ public class HouseBuildingSystem : MonoBehaviour
                             }
                         }
                     }
-                    return false;
+                }
+                ////////////////////////////////////////////////////////////////
+                if (buildingSystemPartType == BuildingSystemPartType.LooseObject)
+                {
+                    Ray ray = Camera.main.ScreenPointToRay(scope.position);
+                    if (Physics.Raycast(ray, out RaycastHit raycastHit))
+                    {
+                        // Raycast Hit something
+                        /*Transform looseObjectTransform = */
+                        if (isBuildProccess)
+                        {
+                            Instantiate(buildingSystemPartSO.prefab, GetMouseWorldSnappedPositionLoose(), Quaternion.Euler(0, looseObjectEulerY, 0));
+                            buildingSystemPartSOList.Add(buildingSystemPartSO);
+                        }
+                        return true;
+                    }
                 }
                 return false;
             }
-            //return false;
-            //if (buildingSystemPartType == BuildingSystemPartType.LooseObject)
-            //{
-            //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            //    if (Physics.Raycast(ray, out RaycastHit raycastHit))
-            //    {
-            //        // Raycast Hit something
-            //        Transform looseObjectTransform = Instantiate(buildingSystemPartSO.prefab, raycastHit.point, Quaternion.Euler(0, looseObjectEulerY, 0));
-            //        //buildingSystemPartSOList.Add(buildingSystemPartSO);
-            //    }
-            //    return;
-            //}
         }
         return false;
     }  
@@ -486,21 +501,21 @@ public class HouseBuildingSystem : MonoBehaviour
             PlacedObjectSaveObjectArray placedObjectSaveObjectArray = new PlacedObjectSaveObjectArray { placedObjectSaveObjectArray = saveObjectList.ToArray() };
             placedObjectSaveObjectArrayList.Add(placedObjectSaveObjectArray);
         }
-        //List<LooseSaveObject> looseSaveObjectList = new List<LooseSaveObject>();
-        //foreach (Transform looseObjectTransform in looseObjectTransformList)
-        //{
-        //    if (looseObjectTransform == null) continue;
-        //    looseSaveObjectList.Add(new LooseSaveObject
-        //    {
-        //        looseObjectSOName = looseObjectTransform.GetComponent<BuildingSystemPartSO>().name,
-        //        position = looseObjectTransform.position,
-        //        quaternion = looseObjectTransform.rotation
-        //    });
-        //}
+        List<LooseSaveObject> looseSaveObjectList = new List<LooseSaveObject>();
+        foreach (Transform looseObjectTransform in looseObjectTransformList)
+        {
+            if (looseObjectTransform == null) continue;
+            looseSaveObjectList.Add(new LooseSaveObject
+            {
+                looseObjectSOName = looseObjectTransform.GetComponent<BuildingSystemPartSO>().name,
+                position = looseObjectTransform.position,
+                quaternion = looseObjectTransform.rotation
+            });
+        }
         SaveObject saveObject = new SaveObject
         {
             placedObjectSaveObjectArrayArray = placedObjectSaveObjectArrayList.ToArray(),
-            //looseSaveObjectArray = looseSaveObjectList.ToArray(),
+            looseSaveObjectArray = looseSaveObjectList.ToArray(),
         };
         string json = JsonUtility.ToJson(saveObject);
         PlayerPrefs.SetString("HouseBuildingSystemSave", json);
@@ -535,7 +550,7 @@ public class HouseBuildingSystem : MonoBehaviour
                     looseSaveObject.position,
                     looseSaveObject.quaternion
                 );
-                //looseObjectTransformList.Add(looseObjectTransform);
+                looseObjectTransformList.Add(looseObjectTransform);
             }
         }
         Debug.Log("Load!");

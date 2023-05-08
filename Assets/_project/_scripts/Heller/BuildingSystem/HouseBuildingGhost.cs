@@ -20,10 +20,6 @@ public class HouseBuildingGhost : MonoBehaviour
     }
     private void LateUpdate() 
     {
-        //if(UtilsClass.IsPointerOverUI())
-        //{
-        //    return;
-        //}
         Vector3 targetPosition = Vector3.zero;
         CheckMatColor(houseBuildingSystem.HandleObjectPlacement(false));
         if (houseBuildingSystem.GetPlaceObjectType() == BuildingSystemPartType.EdgeObject)
@@ -31,7 +27,6 @@ public class HouseBuildingGhost : MonoBehaviour
             FloorEdgePosition floorEdgePosition = houseBuildingSystem.GetMouseFloorEdgePosition();
             if (floorEdgePosition != null)
             {
-                Debug.Log(floorEdgePosition.transform.position);
                 transform.SetPositionAndRotation(Vector3.Lerp(transform.position, floorEdgePosition.transform.position, Time.deltaTime * 15f), Quaternion.Lerp(transform.rotation, floorEdgePosition.transform.rotation, Time.deltaTime * 25f));
                 return;
             }
@@ -39,16 +34,24 @@ public class HouseBuildingGhost : MonoBehaviour
             transform.SetPositionAndRotation(Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * 15f), Quaternion.Lerp(transform.rotation, Quaternion.identity, Time.deltaTime * 25f));
             return;
         }
-        //if (houseBuildingSystem.GetPlaceObjectType() == BuildingSystemPartType.LooseObject)
-        //{
-        //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        //    if (Physics.Raycast(ray, out RaycastHit raycastHit))
-        //    {
-        //        transform.position = Vector3.Lerp(transform.position, raycastHit.point, Time.deltaTime * 15f);
-        //        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, houseBuildingSystem.GetLooseObjectEulerY(), 0), Time.deltaTime * 25f);
-        //    }
-        //    return;
-        //}
+        if (houseBuildingSystem.GetPlaceObjectType() == BuildingSystemPartType.LooseObject)
+        {
+            //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            //if (Physics.Raycast(ray, out RaycastHit raycastHit))
+            //{
+            //    transform.position = Vector3.Lerp(transform.position, raycastHit.point, Time.deltaTime * 15f);
+            //    transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, houseBuildingSystem.GetLooseObjectEulerY(), 0), Time.deltaTime * 25f);
+            //}
+            //FloorEdgePosition floorEdgePosition = houseBuildingSystem.GetMouseFloorEdgePosition();
+            //if (floorEdgePosition != null)
+            //{
+            //    transform.SetPositionAndRotation(Vector3.Lerp(transform.position, floorEdgePosition.transform.position, Time.deltaTime * 15f), Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, houseBuildingSystem.GetLooseObjectEulerY(), 0), Time.deltaTime * 25f));
+            //    return;
+            //}
+            targetPosition = houseBuildingSystem.GetMouseWorldSnappedPositionLoose();
+            transform.SetPositionAndRotation(Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * 15f), Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, houseBuildingSystem.GetLooseObjectEulerY(), 0), Time.deltaTime * 25f));
+            return;
+        }
         if (houseBuildingSystem.GetPlaceObjectType() == BuildingSystemPartType.BaseObject)
         {
             targetPosition = houseBuildingSystem.GetMouseWorldSnappedPosition();
