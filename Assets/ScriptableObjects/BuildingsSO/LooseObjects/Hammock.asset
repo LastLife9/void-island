@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3e7747bdf78fa6141a2f81d16ff91e5f, type: 3}
-  m_Name: floor
+  m_Name: Hammock
   m_EditorClassIdentifier: 
-  nameString: Floor1
-  buildingSystemPartType: 0
-  prefab: {fileID: 5851041394452845431, guid: 30e3baa7b3ff8c945b4d0f2fb87b7d81, type: 3}
-  visual: {fileID: 4703353783929287350, guid: 5a2ea2fb6c37aac4b82e20e5e389a05f, type: 3}
-  width: 2
-  height: 2
+  nameString: Hammock
+  buildingSystemPartType: 2
+  prefab: {fileID: 499818240210314811, guid: 36fe6156250c0d345a2bb8a177afc9dc, type: 3}
+  visual: {fileID: 8722169486300433067, guid: d08f4776ba03d4248816003952748115, type: 3}
+  width: 1
+  height: 1

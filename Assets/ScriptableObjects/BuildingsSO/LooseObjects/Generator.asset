@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e7747bdf78fa6141a2f81d16ff91e5f, type: 3}
+  m_Name: Generator
+  m_EditorClassIdentifier: 
+  nameString: Generator
+  buildingSystemPartType: 2
+  prefab: {fileID: 5511922094970225455, guid: 5aac8abc00d07694196399ce529aedc3, type: 3}
+  visual: {fileID: 1700199688090234025, guid: c3ae2238f91a97e47b4b30f601ca5aeb, type: 3}
+  width: 1
+  height: 1

@@ -32,7 +32,6 @@ public class EquipmentScript : ItemScript
     public override void EquipArmor()
     {
         base.EquipArmor();
-        Debug.Log(base.itemState);
         EquipmentManager.instance.Equip(this);
         EquipmentPanel.instance.AddItemToEqiupPanel(new UnityAction(UnequipArmor), this);
     }

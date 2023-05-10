@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3e7747bdf78fa6141a2f81d16ff91e5f, type: 3}
-  m_Name: wallWindow
+  m_Name: Floor1
   m_EditorClassIdentifier: 
-  nameString: WallWindow1
-  buildingSystemPartType: 1
-  prefab: {fileID: 7871289130880692932, guid: b14d90cac617dff47873c20dfa5798e3, type: 3}
-  visual: {fileID: 4889650795283614710, guid: 8b39fa6aeb70c9d40805b61e01ce2c21, type: 3}
-  width: 0
-  height: 0
+  nameString: Floor1
+  buildingSystemPartType: 0
+  prefab: {fileID: 5851041394452845431, guid: 30e3baa7b3ff8c945b4d0f2fb87b7d81, type: 3}
+  visual: {fileID: 4703353783929287350, guid: 5a2ea2fb6c37aac4b82e20e5e389a05f, type: 3}
+  width: 1
+  height: 1

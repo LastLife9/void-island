@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3e7747bdf78fa6141a2f81d16ff91e5f, type: 3}
-  m_Name: door
+  m_Name: Door3
   m_EditorClassIdentifier: 
-  nameString: Door1
+  nameString: Door3
   buildingSystemPartType: 1
-  prefab: {fileID: 8725143178989618777, guid: ca6e2f6f6f31a98498064907190226d6, type: 3}
-  visual: {fileID: 7682945440668052583, guid: 93214f94404d5b94b9f078ff410fd59b, type: 3}
+  prefab: {fileID: 2919163223018856191, guid: 5a6f05ce353c70145914a5651825b17b, type: 3}
+  visual: {fileID: 2659016167334153694, guid: edf0a323fc6117c46ab6da2a4178b4ec, type: 3}
   width: 0
   height: 0

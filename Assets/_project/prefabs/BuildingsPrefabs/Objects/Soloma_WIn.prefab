@@ -11,8 +11,11 @@ GameObject:
   - component: {fileID: 7871289130880692932}
   - component: {fileID: 6526758574981807457}
   - component: {fileID: 9040768573476604331}
-  - component: {fileID: 7689569532900545833}
   - component: {fileID: 7689569532900545832}
+  - component: {fileID: -2595087717614695164}
+  - component: {fileID: 6611245122766030500}
+  - component: {fileID: 8787201380121376736}
+  - component: {fileID: 6146576296026815519}
   m_Layer: 0
   m_Name: Soloma_WIn
   m_TagString: Untagged
@@ -28,7 +31,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7383580593805142142}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.2299886, y: 0, z: -1.8202128}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -86,19 +89,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &7689569532900545833
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7383580593805142142}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 2, y: 2.5, z: 0.26}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &7689569532900545832
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -112,6 +102,58 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   floorEdgeObjectTypeSO: {fileID: 11400000, guid: 70a7f70a5053b4340ab607f9091e9b54, type: 2}
+--- !u!65 &-2595087717614695164
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7383580593805142142}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.5, y: 2.5, z: 0.26}
+  m_Center: {x: 0.75, y: 1.25, z: 0}
+--- !u!65 &6611245122766030500
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7383580593805142142}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.5, y: 2.5, z: 0.26}
+  m_Center: {x: -0.75, y: 1.25, z: 0}
+--- !u!65 &8787201380121376736
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7383580593805142142}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 0.5, z: 0.26}
+  m_Center: {x: 0, y: 2.25, z: 0}
+--- !u!65 &6146576296026815519
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7383580593805142142}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 0.6, z: 0.26}
+  m_Center: {x: 0, y: 0.35, z: 0}
 --- !u!1 &7689569532214497271
 GameObject:
   m_ObjectHideFlags: 0
@@ -137,7 +179,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7689569532214497271}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.276, z: 0}
+  m_LocalPosition: {x: 0, y: 2.5, z: 0}
   m_LocalScale: {x: 2, y: 0.01, z: 4}
   m_ConstrainProportionsScale: 0
   m_Children: []

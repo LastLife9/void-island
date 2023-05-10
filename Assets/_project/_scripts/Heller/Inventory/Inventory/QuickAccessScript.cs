@@ -1,5 +1,4 @@
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -30,6 +29,12 @@ public class QuickAccessScript : MonoBehaviour
     int btnNumber = 0;
     public void AddItemToQuickAccess(UnityAction unityAction, ItemScript itemScript)
     {
+        if(HasItem(itemScript.name))
+        {
+            return;
+        }
+        UpdatePanel();
+        ClearPanelSlot(btnNumber);
         btnsImage[btnNumber].enabled = true;
         inventoryPanelImages[btnNumber].enabled = true;
         btnsImage[btnNumber].sprite = itemScript.icon;
@@ -37,40 +42,38 @@ public class QuickAccessScript : MonoBehaviour
         inventoryPanelImages[btnNumber].sprite = itemScript.icon;
         inventoryPanelCount[btnNumber].text = itemScript.count.ToString();
         itemScripts[btnNumber] = itemScript;
-        CheckButtonsForFunctionality().onClick.AddListener(unityAction);
-    }
-    Button CheckButtonsForFunctionality()
-    {
-        Button button = null;
-        for (int i = 0; i < btns.Length; i++)
-        {
-            if (btns[i].onClick.GetPersistentEventCount() <= 0)
-            {
-                return btns[i];
-            }
-        }
-        if(btnNumber >= btns.Length)
-        {
-            btnNumber = 0;
-        }
-        button = btns[btnNumber];
-        btnNumber++;
-        button.onClick.RemoveAllListeners();
-        return button;
+        btns[btnNumber].onClick.AddListener(unityAction);
     }
     public void UpdatePanel()
     {
-        for(int i = 0; i< btns.Length; i ++)
+        int counter = 0;
+        int posibleBtnNumber = -1;
+        for(int i = 0; i < btns.Length; i ++)
         {
             if (itemScripts[i] != null)
             {
                 if(itemScripts[i].count <= 0)
                 {
+                    if (posibleBtnNumber == -1)
+                    {
+                        posibleBtnNumber = i;
+                    }
                     ClearPanelSlot(i);
                     continue;
                 }
+                counter++;
                 ChangeCounter(i);
+                continue;
             }
+            if(posibleBtnNumber == -1)
+            {
+                posibleBtnNumber = i;
+            }
+        }
+        btnNumber = posibleBtnNumber;
+        if(counter >= btns.Length)
+        {
+            btnNumber = 0;
         }
     }
     void ClearPanelSlot(int number)
@@ -88,5 +91,16 @@ public class QuickAccessScript : MonoBehaviour
     {
         btnsCount[number].text = itemScripts[number].count.ToString();
         inventoryPanelCount[number].text = itemScripts[number].count.ToString();
+    }
+    bool HasItem(string name)
+    {
+        for (int i = 0; i < btns.Length; i++)
+        {
+            if (itemScripts[i] != null && itemScripts[i].name == name)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c63ebf4d0a7ec33488801186c733d172, type: 3}
-  m_Name: WindowWall1
+  m_Name: Filtr
   m_EditorClassIdentifier: 
   itemType: 1
-  name: WindowWall1
-  icon: {fileID: 21300000, guid: c2d729d0dd5c85a4492546ca449f0d12, type: 3}
+  name: Filtr
+  icon: {fileID: 21300000, guid: a6aa98599a8cd5d45bf43c031934faec, type: 3}
