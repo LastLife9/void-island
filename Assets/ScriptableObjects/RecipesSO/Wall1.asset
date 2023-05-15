@@ -17,6 +17,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9facb02973db9354695f95136732c6eb, type: 2}
   - {fileID: 11400000, guid: 864cf426c16de524c94f22dadc5cf3c4, type: 2}
   itemToCraft: {fileID: 11400000, guid: bbbde8ad263f699479696409ec6fa136, type: 2}
-  timeToCraft: 0.9
+  timeToCraft: 0.6
   requiredItemsCount: 0200000001000000
   itemToCraftCount: 1
+  description: Most common wall
