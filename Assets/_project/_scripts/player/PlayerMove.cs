@@ -15,6 +15,15 @@ public class PlayerMove : MonoBehaviour
     public GameObject cam_Walk;
     public GameObject cam_Fly;
 
+    [Header("LookTarget")]
+    public float TargetLength = 20f;
+    public LayerMask TargetLayers;
+
+    [Header("Attack")]
+    public float Damage = 0.4f;
+    public float SwingTimeout = 0.25f;
+    public float AttackTimeout = 0.75f;
+
     private List<MoveSettings> _moveSettings = new List<MoveSettings>();
     private Dictionary<MoveType, MoveSettings> _moveSettingsDict;
     private MoveSettings _currentMoveSettings;
@@ -26,6 +35,7 @@ public class PlayerMove : MonoBehaviour
     private Rigidbody _rb;
     private Animator _anim;
     private GameObject _mainCamera;
+    private Camera _cam;
 
     private Vector2 _look;
     private Vector2 _move;
@@ -37,11 +47,14 @@ public class PlayerMove : MonoBehaviour
 
     private bool _isGround = false;
     private bool _jump = false;
+    private bool _attack = false;
 
     private float _rotationVelocityX;
     private float _rotationVelocityY;
     private float _jumpTimeoutDelta;
     private float _fallTimeoutDelta;
+    private float _swingTimeoutDelta;
+    private float _attackTimeoutDelta;
 
     private int _animIDForward;
     private int _animIDRight;
@@ -50,6 +63,7 @@ public class PlayerMove : MonoBehaviour
     private int _animIDFreeFall;
     private int _animIDMotionSpeed;
     private int _animIDFly;
+    private int _animIDAttack;
 
 
     #region MonoBehaviourFunctions
@@ -59,6 +73,7 @@ public class PlayerMove : MonoBehaviour
         _inputState = GetComponent<PlayerInputState>();
         _anim = GetComponentInChildren<Animator>();
         _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+        _cam = _mainCamera.GetComponent<Camera>();
         Application.targetFrameRate = 60;
     }
 
@@ -97,6 +112,7 @@ public class PlayerMove : MonoBehaviour
         _animIDFly = Animator.StringToHash("Fly");
         _animIDFreeFall = Animator.StringToHash("FreeFall");
         _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
+        _animIDAttack = Animator.StringToHash("Attack");
     }
 
     private void AssembleResources()
@@ -147,6 +163,47 @@ public class PlayerMove : MonoBehaviour
             _jump = false;
         }
     }
+    private void Attack()
+    {
+        if (_attack)
+        {
+            _attackTimeoutDelta = AttackTimeout;
+
+            _anim.SetBool(_animIDAttack, true);
+
+            if (_swingTimeoutDelta >= 0)
+            {
+                _swingTimeoutDelta -= Time.deltaTime;
+            }
+            else
+            {
+                Transform target = LookTarget();
+
+                if(target != null)
+                {
+                    if(target.TryGetComponent(out Destroyable destroyable))
+                    {
+                        destroyable.TakeDamage(Damage);
+                    }
+                }
+
+                _attack = false;
+            }
+        }
+        else
+        {
+            _swingTimeoutDelta = SwingTimeout;
+
+            if (_attackTimeoutDelta >= 0)
+            {
+                _attackTimeoutDelta -= Time.deltaTime;
+            }
+            else
+            {
+                _anim.SetBool(_animIDAttack, false);
+            }
+        }
+    }
     private void Move()
     {
         _inputVector = CalculateInput();
@@ -160,6 +217,8 @@ public class PlayerMove : MonoBehaviour
                 Walk();
                 CharacterWalkRotation();
                 Jump();
+                LookTarget();
+                Attack();
                 break;
             case MoveType.Fly:
                 Fly();
@@ -219,6 +278,10 @@ public class PlayerMove : MonoBehaviour
     public void VirtualJumpInput()
     {
         _jump = true;
+    }
+    public void VirtualAttackInput()
+    {
+        _attack = true;
     }
     public void MoveStateChange(MoveType state)
     {
@@ -417,5 +480,24 @@ public class PlayerMove : MonoBehaviour
             _currentMoveSettings.CharacterRotationSpeed * Time.deltaTime);
     }
     public MoveType GetMoveType() => _moveType;
+    public Transform LookTarget()
+    {
+        Vector3 rayOrigin = new Vector3(0.5f, 0.5f, 0f);
+        RaycastHit hit;
+        Ray ray = _cam.ViewportPointToRay(rayOrigin);
+        
+
+        if (Physics.Raycast(ray, out hit, TargetLength, TargetLayers))
+        {
+            Transform objectHit = hit.transform;
+            Debug.DrawRay(_cam.transform.position, _cam.transform.forward * TargetLength, Color.green);
+            return objectHit;
+        }
+        else
+        {
+            Debug.DrawRay(_cam.transform.position, _cam.transform.forward * TargetLength, Color.red);
+            return null;
+        }
+    }
     #endregion
 }

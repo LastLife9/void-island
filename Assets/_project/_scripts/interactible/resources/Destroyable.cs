@@ -1,23 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class DestroyableResource : MonoBehaviour
+public class Destroyable : MonoBehaviour
 {
     private Animator anim;
 
     public UnityEvent OnDestroyEvent;
     public UnityEvent OnTakeDamageEvent;
 
-    public float Health = 100f;
-    private float _health = 0f;
+    public float Health;
+    private float _health;
+
+    public bool _alive;
 
     private int _animIDTakeDmg;
     private int _animIDDestroy;
-
-    private bool alive = true;
-
 
     private void Awake()
     {
@@ -26,39 +24,36 @@ public class DestroyableResource : MonoBehaviour
 
     private void Start()
     {
-        AssignAnimationIDs();
-
         _health = Health;
+        AssignAnimationIDs();
     }
-
 
     public void TakeDamage(float dmg)
     {
-        if (!alive) return;
+        if (!_alive) return;
 
         _health -= dmg;
-        if(_health <= 0f)
+        if (_health <= 0f)
         {
             DestroyResurce();
         }
 
-        OnTakeDamageEvent?.Invoke();
         anim?.SetTrigger(_animIDTakeDmg);
+        OnTakeDamageEvent?.Invoke();
     }
 
     public void DestroyResurce()
     {
-        alive = false;
-
         anim?.SetTrigger(_animIDDestroy);
         OnDestroyEvent?.Invoke();
+        _alive = false;
     }
 
     private void AssignAnimationIDs()
     {
         if (anim == null) return;
 
-        _animIDTakeDmg = Animator.StringToHash("TakeDamge");
+        _animIDTakeDmg = Animator.StringToHash("AttackImpact");
         _animIDDestroy = Animator.StringToHash("Destroy");
     }
 }

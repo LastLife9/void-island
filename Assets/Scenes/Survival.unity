@@ -1365,7 +1365,7 @@ GameObject:
   m_Component:
   - component: {fileID: 649118082}
   - component: {fileID: 649118083}
-  - component: {fileID: 649118084}
+  - component: {fileID: 649118085}
   m_Layer: 0
   m_Name: Tree_Palm
   m_TagString: Untagged
@@ -1404,7 +1404,7 @@ CapsuleCollider:
   m_Height: 3.825402
   m_Direction: 1
   m_Center: {x: 0, y: 1.412701, z: -0.15955254}
---- !u!114 &649118084
+--- !u!114 &649118085
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1413,9 +1413,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 649118081}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 96913c8b9815bd44284e3d362928e7b6, type: 3}
+  m_Script: {fileID: 11500000, guid: 92b142579d07f034ebf5d2341dd9db5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDestroyEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnTakeDamageEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  Health: 0
+  _alive: 0
 --- !u!1 &696338486
 GameObject:
   m_ObjectHideFlags: 0
