@@ -38,13 +38,13 @@ public class Destroyable : MonoBehaviour
             DestroyResurce();
         }
 
-        anim?.SetTrigger(_animIDTakeDmg);
+        //if(anim) anim.SetTrigger(_animIDTakeDmg);
         OnTakeDamageEvent?.Invoke();
     }
 
     public void DestroyResurce()
     {
-        anim?.SetTrigger(_animIDDestroy);
+        //if (anim) anim.SetTrigger(_animIDDestroy);
         OnDestroyEvent?.Invoke();
         _alive = false;
     }

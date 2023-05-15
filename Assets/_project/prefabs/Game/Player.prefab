@@ -141,7 +141,9 @@ MonoBehaviour:
   TargetLayers:
     serializedVersion: 2
     m_Bits: 2147483647
-  SwingTimeout: 0.25
+  Damage: 0.1
+  Cooldown: 1.1
+  SwingTimeout: 0.35
   AttackTimeout: 0.6
 --- !u!114 &6432565690325153868
 MonoBehaviour:

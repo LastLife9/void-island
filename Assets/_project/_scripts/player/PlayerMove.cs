@@ -21,6 +21,7 @@ public class PlayerMove : MonoBehaviour
 
     [Header("Attack")]
     public float Damage = 0.4f;
+    public float Cooldown = 0.3f;
     public float SwingTimeout = 0.25f;
     public float AttackTimeout = 0.75f;
 
@@ -55,6 +56,7 @@ public class PlayerMove : MonoBehaviour
     private float _fallTimeoutDelta;
     private float _swingTimeoutDelta;
     private float _attackTimeoutDelta;
+    private float _attackCooldownDelta;
 
     private int _animIDForward;
     private int _animIDRight;
@@ -165,6 +167,8 @@ public class PlayerMove : MonoBehaviour
     }
     private void Attack()
     {
+        if(_attackCooldownDelta >= 0.0f) _attackCooldownDelta -= Time.deltaTime;
+
         if (_attack)
         {
             _attackTimeoutDelta = AttackTimeout;
@@ -281,6 +285,12 @@ public class PlayerMove : MonoBehaviour
     }
     public void VirtualAttackInput()
     {
+        if (_attackCooldownDelta > 0)
+        {
+            return;
+        }
+
+        _attackCooldownDelta = Cooldown;
         _attack = true;
     }
     public void MoveStateChange(MoveType state)
