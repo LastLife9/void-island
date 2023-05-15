@@ -17,6 +17,9 @@ public class Destroyable : MonoBehaviour
     private int _animIDTakeDmg;
     private int _animIDDestroy;
 
+    public Transform Attacker => _attacker;
+    private Transform _attacker;
+
     private void Awake()
     {
         anim = GetComponent<Animator>();
@@ -28,7 +31,7 @@ public class Destroyable : MonoBehaviour
         AssignAnimationIDs();
     }
 
-    public void TakeDamage(float dmg)
+    public void TakeDamage(float dmg, Transform attacker = null)
     {
         if (!_alive) return;
 
@@ -40,6 +43,8 @@ public class Destroyable : MonoBehaviour
 
         //if(anim) anim.SetTrigger(_animIDTakeDmg);
         OnTakeDamageEvent?.Invoke();
+
+        if (attacker != null) _attacker = attacker;
     }
 
     public void DestroyResurce()

@@ -187,7 +187,7 @@ public class PlayerMove : MonoBehaviour
                 {
                     if(target.TryGetComponent(out Destroyable destroyable))
                     {
-                        destroyable.TakeDamage(Damage);
+                        destroyable.TakeDamage(Damage, transform);
                     }
                 }
 
