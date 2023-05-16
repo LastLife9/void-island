@@ -22,6 +22,7 @@ public class VirtualTouchField : InputBase
     [Header("Output")]
     public Event touchFieldOutputEvent;
     public float Multiplier = 0.1f;
+    public float Trashhold = 0.1f;
 
     public RectTransform containerRect;
 
@@ -108,6 +109,10 @@ public class VirtualTouchField : InputBase
             }
         }
         
+        if(touchDist.magnitude <= Trashhold)
+        {
+            touchDist = new Vector2();
+        }
         OutputPointerEventValue(touchDist);
     }
     Vector2 getTouchPosition(Vector2 touchPosition)

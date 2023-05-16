@@ -93,4 +93,5 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   Multiplier: 0.1
+  Trashhold: 2
   containerRect: {fileID: 164683160089420599}
