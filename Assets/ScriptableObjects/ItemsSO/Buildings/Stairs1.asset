@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c63ebf4d0a7ec33488801186c733d172, type: 3}
-  m_Name: Stairs
+  m_Name: Stairs1
   m_EditorClassIdentifier: 
   itemType: 1
-  name: Stairs
+  name: Stairs1
   icon: {fileID: 21300000, guid: dfecc0f03546c314bb971f47333c3908, type: 3}

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3e7747bdf78fa6141a2f81d16ff91e5f, type: 3}
-  m_Name: Stairs
+  m_Name: Stairs1
   m_EditorClassIdentifier: 
   nameString: Stairs1
   buildingSystemPartType: 1
