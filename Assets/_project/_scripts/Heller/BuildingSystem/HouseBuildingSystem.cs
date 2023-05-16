@@ -76,8 +76,11 @@ public class HouseBuildingSystem : MonoBehaviour
     [SerializeField] Transform playerTransform;
     [SerializeField] LayerMask objectEdgeColliderLayerMask;
     [SerializeField] List<BuildingSystemPartSO> buildingSystemPartSOList = null;
+    [Header("UI")]
     [SerializeField] TextMeshProUGUI textMeshPro;
     [SerializeField] Transform scope;
+    [SerializeField] GameObject buildingPanel;
+    [SerializeField] GameObject rotateBtn;
     List<Transform> looseObjectTransformList;
     Vector3 mousePosition = Vector3.zero;
     private BuildingSystemPartSO buildingSystemPartSO;
@@ -162,6 +165,12 @@ public class HouseBuildingSystem : MonoBehaviour
     {
         buildingSystemPartType = placedObjectTypeSO.buildingSystemPartType;
         this.buildingSystemPartSO = placedObjectTypeSO;
+        buildingPanel.SetActive(true);
+        rotateBtn.SetActive(false);
+        if (buildingSystemPartType == BuildingSystemPartType.LooseObject)
+        {
+            rotateBtn.SetActive(true);
+        }
         RefreshSelectedObjectType();
     }
     public float GetLooseObjectEulerY()
@@ -212,13 +221,10 @@ public class HouseBuildingSystem : MonoBehaviour
         //}
         if (Input.GetKeyDown(KeyCode.X)) { SetDemolishActive(); }
     }
-    private void HandleDirRotation()
+    public void HandleDirRotation()
     {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            dir = BuildingSystemPartSO.GetNextDir(dir);
-            //    looseObjectEulerY += Time.deltaTime * 90f;
-        }
+        //dir = BuildingSystemPartSO.GetNextDir(dir);
+        looseObjectEulerY += 90f;
     }
     private void HandleDemolish()
     {
@@ -238,8 +244,10 @@ public class HouseBuildingSystem : MonoBehaviour
             }
         }
     }
-    private void DeselectObjectType()
+    public void DeselectObjectType()
     {
+        buildingPanel.SetActive(false);
+        rotateBtn.SetActive(false);
         buildingSystemPartSO = null;
         //floorEdgeObjectTypeSO = null;
         //looseObjectSO = null;
@@ -359,6 +367,7 @@ public class HouseBuildingSystem : MonoBehaviour
                                 if (isBuildProccess)
                                 {
                                     floorPlacedObject.PlaceEdge(floorEdgePosition.edge, buildingSystemPartSO);
+                                    CheckIfHaveItem();
                                 }
                                 return true;
                             }
@@ -377,6 +386,7 @@ public class HouseBuildingSystem : MonoBehaviour
                         {
                             Instantiate(buildingSystemPartSO.prefab, GetMouseWorldSnappedPositionLoose(), Quaternion.Euler(0, looseObjectEulerY, 0));
                             buildingSystemPartSOList.Add(buildingSystemPartSO);
+                            CheckIfHaveItem();
                         }
                         return true;
                     }
@@ -445,8 +455,8 @@ public class HouseBuildingSystem : MonoBehaviour
                 {
                     grid.GetGridObject(gridPosition.x, gridPosition.y).SetPlacedObject(placedObject);
                 }
-                CheckIfHaveItem();
                 placedObject.GridSetupDone();
+                CheckIfHaveItem();
                 return true;
             }
             //OnObjectPlaced?.Invoke(placedObject, EventArgs.Empty);

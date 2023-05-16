@@ -132,7 +132,7 @@ GameObject:
   - component: {fileID: 7940527182472557802}
   - component: {fileID: 1582050304965531738}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: FloorCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -186,7 +186,7 @@ GameObject:
   - component: {fileID: 7318622101153060509}
   - component: {fileID: 7811248048891538043}
   m_Layer: 0
-  m_Name: Cube (1)
+  m_Name: FloorCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
