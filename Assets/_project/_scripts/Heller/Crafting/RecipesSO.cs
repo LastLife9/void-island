@@ -8,4 +8,5 @@ public class RecipesSO : ScriptableObject
     public float timeToCraft = .9f;
     public int[] requiredItemsCount;
     public int itemToCraftCount;
+    public string description;
 }

@@ -8,6 +8,8 @@ public class CraftRecipe : MonoBehaviour
     [SerializeField] Image[] itemImages;
     [SerializeField] TextMeshProUGUI[] requiredItemsCountText;
     [SerializeField] TextMeshProUGUI sliderText;
+    [SerializeField] TextMeshProUGUI recipeName;
+    [SerializeField] TextMeshProUGUI recipeDescription;
     [SerializeField] Image itemToCraftImage;
     [SerializeField] Image slider;
     [SerializeField] Button craftButton;
@@ -27,6 +29,8 @@ public class CraftRecipe : MonoBehaviour
         itemToCraftCount = recipe.itemToCraftCount;
         requiredItems = recipe.requiredItems;
         itemToCraft = recipe.itemToCraft;
+        recipeName.text = recipe.name;
+        recipeDescription.text = recipe.description;
         enableCraft = new UnityAction(EnableCraftAfterCoroutine);
     }
     private void Start()
@@ -46,7 +50,7 @@ public class CraftRecipe : MonoBehaviour
     {
         for(int i = 0; i < itemImages.Length; i++)
         {
-            itemImages[i].gameObject.SetActive(false);
+            itemImages[i].transform.parent.gameObject.SetActive(false);
             requiredItemsCountText[i].gameObject.SetActive(false);
         }
         craftButton.interactable = false;
@@ -54,7 +58,7 @@ public class CraftRecipe : MonoBehaviour
         for (int i = 0; i < requiredItems.Length; i++)
         {
             sliderText.text = "0%";
-            itemImages[i].gameObject.SetActive(true);
+            itemImages[i].transform.parent.gameObject.SetActive(true);
             requiredItemsCountText[i].gameObject.SetActive(true);
             itemImages[i].sprite = requiredItems[i].icon;
             requiredItemsCountText[i].color = Color.green;

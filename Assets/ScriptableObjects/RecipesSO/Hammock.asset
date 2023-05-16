@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 472778bfc09e182419cd9b2b5976a071, type: 3}
-  m_Name: Floor1
+  m_Name: Hammock
   m_EditorClassIdentifier: 
-  name: Floor1
+  name: Hammock
   requiredItems:
   - {fileID: 11400000, guid: 9facb02973db9354695f95136732c6eb, type: 2}
   - {fileID: 11400000, guid: 864cf426c16de524c94f22dadc5cf3c4, type: 2}
-  itemToCraft: {fileID: 11400000, guid: 3c719f19eafbfac4bba9cbe2e7e2191e, type: 2}
-  timeToCraft: 0.5
-  requiredItemsCount: 0100000002000000
+  itemToCraft: {fileID: 11400000, guid: 9c7f7f8e76c746d4c91b1ab18deba2bf, type: 2}
+  timeToCraft: 0.9
+  requiredItemsCount: 0200000001000000
   itemToCraftCount: 1
-  description: Most common floor
+  description: 
