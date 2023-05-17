@@ -50,5 +50,7 @@ public class Collectable : MonoBehaviour
         {
             Debug.LogError("ItemsManager instance not found");
         }
+
+        gameObject.SetActive(false);
     }
 }
