@@ -30,12 +30,12 @@ public class Collectable : MonoBehaviour
         
     }
 
-    public void Take(Transform owner)
+    public void Take(Vector3 destination)
     {
         coll.enabled = false;
         rb.isKinematic = true;
 
-        transform.DOMove(owner.position, FollowDuration)
+        transform.DOMove(destination, FollowDuration)
             .SetEase(Ease.InCubic)
             .OnComplete(OnAnimationComplete);
     }

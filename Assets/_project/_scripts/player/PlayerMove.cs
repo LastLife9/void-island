@@ -522,7 +522,7 @@ public class PlayerMove : MonoBehaviour
         {
             if(coll.TryGetComponent(out Collectable collectable))
             {
-                collectable.Take(_transform);
+                collectable.Take(_transform.position + new Vector3(0.0f, 1f, 0.0f));
             }
         }
     }

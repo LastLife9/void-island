@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ItemTag: Wood
   Count: 1
-  FollowDuration: 0.5
+  FollowDuration: 0.3
 --- !u!136 &222792484776679773
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -57,7 +57,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 222792484776679762}
-  m_Material: {fileID: 13400000, guid: 796b2f78af8865d4b87f0a8fde0cc2bd, type: 2}
+  m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.26
