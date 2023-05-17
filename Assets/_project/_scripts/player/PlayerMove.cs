@@ -15,9 +15,11 @@ public class PlayerMove : MonoBehaviour
     public GameObject cam_Walk;
     public GameObject cam_Fly;
 
-    [Header("LookTarget")]
+    [Header("LookTargets")]
     public float TargetLength = 20f;
-    public LayerMask TargetLayers;
+    public float TakeCollectablesRadius = 3f;
+    public LayerMask TargetLayer;
+    public LayerMask CollectableLayer;
 
     [Header("Attack")]
     public float Damage = 0.4f;
@@ -33,6 +35,7 @@ public class PlayerMove : MonoBehaviour
     private MoveType _moveType = MoveType.Walk;
     private MoveType _prevMoveType;
 
+    private Transform _transform;
     private Rigidbody _rb;
     private Animator _anim;
     private GameObject _mainCamera;
@@ -71,6 +74,7 @@ public class PlayerMove : MonoBehaviour
     #region MonoBehaviourFunctions
     private void Awake()
     {
+        _transform = transform;
         _rb = GetComponent<Rigidbody>();
         _inputState = GetComponent<PlayerInputState>();
         _anim = GetComponentInChildren<Animator>();
@@ -187,7 +191,7 @@ public class PlayerMove : MonoBehaviour
                 {
                     if(target.TryGetComponent(out Destroyable destroyable))
                     {
-                        destroyable.TakeDamage(Damage, transform);
+                        destroyable.TakeDamage(Damage, _transform);
                     }
                 }
 
@@ -223,10 +227,12 @@ public class PlayerMove : MonoBehaviour
                 Jump();
                 LookTarget();
                 Attack();
+                SearchCollectables();
                 break;
             case MoveType.Fly:
                 Fly();
                 CharacterFlyRotation();
+                SearchCollectables();
                 if (_isGround)
                 {
                     MoveStateChange(MoveType.Walk);
@@ -361,7 +367,7 @@ public class PlayerMove : MonoBehaviour
     }
     private void GroundedCheck()
     {
-        Vector3 spherePosition = transform.position;
+        Vector3 spherePosition = _transform.position;
         _isGround = Physics.CheckSphere(spherePosition,
             CheckGroundRadius,
             GroundLayers,
@@ -495,9 +501,8 @@ public class PlayerMove : MonoBehaviour
         Vector3 rayOrigin = new Vector3(0.5f, 0.5f, 0f);
         RaycastHit hit;
         Ray ray = _cam.ViewportPointToRay(rayOrigin);
-        
 
-        if (Physics.Raycast(ray, out hit, TargetLength, TargetLayers))
+        if (Physics.Raycast(ray, out hit, TargetLength, TargetLayer))
         {
             Transform objectHit = hit.transform;
             Debug.DrawRay(_cam.transform.position, _cam.transform.forward * TargetLength, Color.green);
@@ -508,6 +513,22 @@ public class PlayerMove : MonoBehaviour
             Debug.DrawRay(_cam.transform.position, _cam.transform.forward * TargetLength, Color.red);
             return null;
         }
+    }
+    public void SearchCollectables()
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(_transform.position, TakeCollectablesRadius, CollectableLayer);
+
+        foreach (Collider coll in hitColliders)
+        {
+            if(coll.TryGetComponent(out Collectable collectable))
+            {
+                collectable.Take(_transform);
+            }
+        }
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(transform.position, TakeCollectablesRadius);
     }
     #endregion
 }

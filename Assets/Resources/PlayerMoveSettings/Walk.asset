@@ -18,8 +18,8 @@ MonoBehaviour:
   Speed: 4
   SmoothSpeedMoment: 15
   JumpHeight: 1.2
-  JumpTimeout: 0.3
-  FallTimeout: 0.25
+  JumpTimeout: 0.35
+  FallTimeout: 0.3
   CharacterRotationSpeed: 5
   CameraSmoothTimer: 0.1
   TopClamp: 70
