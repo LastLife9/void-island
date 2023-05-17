@@ -20,12 +20,13 @@ public class ItemsManager : MonoBehaviour
         foreach (var itemScript in itemsScript) 
         {
             Inventory.instance.UpdateInventory(itemScript);
+            itemScript.Start();
         }
         //TakeItem("Leaf", 10);
         //TakeItem("Wood", 10);
-        TakeItem("Wall1", 100);
-        TakeItem("Floor1", 100);
-        TakeItem("Stove", 100);
+        //TakeItem("Wall1", 100);
+        //TakeItem("Floor1", 100);
+        //TakeItem("Stove", 100);
     }
     public ItemScript GetItem(string name)
     {

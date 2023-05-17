@@ -11,15 +11,9 @@ public class ItemScript
     public string name;
     public Sprite icon;
     public int count;
-    //public Dictionary<string, int> stats = new Dictionary<string, int>();
-    //void Start()
-    //{
-    //    onItemUseCallback += UpdateItem;    // Subscribe to the onItemUse callback
-    //}
     #region Contructors
     public ItemScript(Item item)
     {
-        //Start();
         itemType = item.itemType;
         name = item.name;
         icon = item.icon;
@@ -43,11 +37,17 @@ public class ItemScript
     }
     public ItemScript()
     {
-        //Start();
         name = "";
         icon = null;
     }
     #endregion
+    public void Start()
+    {
+        if (itemType != ItemType.Armor && itemType != ItemType.Rescources)
+        {
+            QuickAccessScript.instance.AddItemToQuickAccess(new UnityAction(UseFromQuickAccess), new UnityAction(UnequipItem), this);
+        }
+    }
     public void ChangeItemCount(int newCount = 0)
     {
         count += newCount;
@@ -137,21 +137,23 @@ public class ItemScript
             EquipItemToQuickAccess();
             return;
         }
-        EquipArmor();
+        EquipItem();
     }
-    public virtual void EquipArmor()
+    public virtual void EquipItem()
     {
         UpdateItem(ItemState.Equiped);
         Inventory.instance.UpdateInventory(this);
     }
-    public virtual void UnequipArmor()
+    public virtual void UnequipItem()
     {
         UpdateItem(ItemState.Inventory);
         Inventory.instance.UpdateInventory(this);
     }
     void EquipItemToQuickAccess()
     {
-        QuickAccessScript.instance.AddItemToQuickAccess(new UnityAction(UseFromQuickAccess), this);
+        UpdateItem(ItemState.Equiped);
+        Inventory.instance.UpdateInventory(this);
+        QuickAccessScript.instance.AddItemToQuickAccess(new UnityAction(UseFromQuickAccess), new UnityAction(UnequipItem), this);
     }
     #endregion
 }

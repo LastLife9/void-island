@@ -8,6 +8,7 @@ public class HouseBuildingGhost : MonoBehaviour
     [SerializeField] Material greenMat;
     [SerializeField] Material redMat;
     List<MeshRenderer> meshRenderers = new List<MeshRenderer>();
+    VisualObjectScript visualObjectScript = null;
     private void Start() 
     {
         houseBuildingSystem = HouseBuildingSystem.instance;
@@ -67,19 +68,21 @@ public class HouseBuildingGhost : MonoBehaviour
             acceptButton.SetActive(false);
             return;
         }
-        acceptButton.SetActive(isCanPlace);
-        if (isCanPlace)
+        acceptButton.SetActive(false);
+        if (!isCanPlace || visualObjectScript.isInOtherObject)
         {
-            foreach(MeshRenderer meshRenderer in meshRenderers)
+            foreach (MeshRenderer meshRenderer in meshRenderers)
             {
-                meshRenderer.sharedMaterial = greenMat;
+                meshRenderer.sharedMaterial = redMat;
             }
             return;
         }
+        acceptButton.SetActive(true);
         foreach (MeshRenderer meshRenderer in meshRenderers)
         {
-            meshRenderer.sharedMaterial = redMat;
+            meshRenderer.sharedMaterial = greenMat;
         }
+        return;
     }
     private void RefreshVisual()
     {
@@ -96,6 +99,7 @@ public class HouseBuildingGhost : MonoBehaviour
             return;
         }
         visual = Instantiate(placedObjectTypeSO.visual, Vector3.zero, Quaternion.identity);
+        visualObjectScript = visual.GetComponent<VisualObjectScript>();
         visual.parent = transform;
         visual.localPosition = Vector3.zero;
         visual.localEulerAngles = Vector3.zero;
@@ -107,10 +111,10 @@ public class HouseBuildingGhost : MonoBehaviour
     }
     private void SetLayerRecursive(GameObject targetGameObject, int layer) 
     {
-        targetGameObject.layer = layer;
+        //targetGameObject.layer = layer;
         foreach (Transform child in targetGameObject.transform) 
         {
-            SetLayerRecursive(child.gameObject, layer);
+            //SetLayerRecursive(child.gameObject, layer);
             if (child.TryGetComponent<MeshRenderer>(out MeshRenderer meshRenderer))
             {
                 meshRenderers.Add(meshRenderer);

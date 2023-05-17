@@ -47,7 +47,7 @@ public class EquipmentManager : MonoBehaviour
 		{
 			// Add the item to the inventory
 			oldItem = currentEquipment[slotIndex];
-			oldItem.UnequipArmor();
+			oldItem.UnequipItem();
 			if (IsDefault(oldItem.name))
 			{
 				return null;
@@ -106,7 +106,7 @@ public class EquipmentManager : MonoBehaviour
             if (!PlayerPrefs.HasKey("Equiped" + (int)equipmentScript.equipSlot) || PlayerPrefs.GetString("Equiped" + (int)equipmentScript.equipSlot) == "")
             {
                 //Equip(equipmentScript);
-				equipmentScript.EquipArmor();
+				equipmentScript.EquipItem();
             }
         }
 	}

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2125342471640379932}
   - component: {fileID: 49957574833949835}
   - component: {fileID: 6065920141975400073}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Wall_Fachwerk_Door
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -136,7 +136,7 @@ GameObject:
   m_Component:
   - component: {fileID: 364494578102810097}
   - component: {fileID: 1529866157923356699}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}

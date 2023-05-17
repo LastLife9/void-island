@@ -287,7 +287,7 @@ public class HouseBuildingSystem : MonoBehaviour
     public FloorEdgePosition GetMouseFloorEdgePosition()
     {
             Ray ray = Camera.main.ScreenPointToRay(scope.position);
-            if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f, objectEdgeColliderLayerMask))
+            if (Physics.Raycast(ray, out RaycastHit raycastHit, 99f, objectEdgeColliderLayerMask))
             {
                 // Raycast Hit Edge Object
                 if (raycastHit.collider.TryGetComponent(out FloorEdgePosition floorEdgePosition))

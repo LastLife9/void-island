@@ -24,10 +24,10 @@ public class Mouse3D : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(scope.position);
         if (Physics.Raycast(ray, out RaycastHit raycastHit, 30f, mouseColliderLayerMask))
         {
-            if(raycastHit.transform != null)
-            {
-                Debug.Log(raycastHit.transform.name);
-            }
+            //if(raycastHit.transform != null)
+            //{
+            //    Debug.Log(raycastHit.transform.name);
+            //}
             return raycastHit.point;
         }
         return Vector3.zero;

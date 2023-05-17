@@ -27,21 +27,21 @@ public class EquipmentScript : ItemScript
     public override void MoveItem()
     {
         base.MoveItem();
-        EquipArmor();
+        EquipItem();
     }
-    public override void EquipArmor()
+    public override void EquipItem()
     {
-        base.EquipArmor();
+        base.EquipItem();
         EquipmentManager.instance.Equip(this);
-        EquipmentPanel.instance.AddItemToEqiupPanel(new UnityAction(UnequipArmor), this);
+        EquipmentPanel.instance.AddItemToEqiupPanel(new UnityAction(UnequipItem), this);
     }
-    public override void UnequipArmor()
+    public override void UnequipItem()
     {
         if(EquipmentManager.instance.IsDefault(name))
         {
             return;
         }
-        base.UnequipArmor();
+        base.UnequipItem();
         EquipmentManager.instance.Unequip((int)equipSlot);
     }
 }

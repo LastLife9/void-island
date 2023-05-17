@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 6611245122766030500}
   - component: {fileID: 8787201380121376736}
   - component: {fileID: 6146576296026815519}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Soloma_WIn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -164,7 +164,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7689569532214497270}
   - component: {fileID: 7689569532214497265}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}

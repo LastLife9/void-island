@@ -27,12 +27,6 @@ public class Inventory : MonoBehaviour
 	public int space = 20;  // Amount of slots in inventory
 	// Current list of items in inventory
 	public List<ItemScript> items = new List<ItemScript>();
-    // Add a new item. If there is enough room we
-    // return true. Else we return false.
-    // Update the inventory UI by:
-    //		- Adding items
-    //		- Clearing empty slots
-    // This is called using a delegate on the Inventory.
     void UpdateUI()
     {
         // Loop through all the slots

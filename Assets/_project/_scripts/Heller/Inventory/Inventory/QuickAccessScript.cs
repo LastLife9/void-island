@@ -21,13 +21,14 @@ public class QuickAccessScript : MonoBehaviour
     }
     #endregion
     [SerializeField] Button[] btns;
+    [SerializeField] Button[] inventoryPanelBtns;
     [SerializeField] Image[] inventoryPanelImages;
     [SerializeField] TextMeshProUGUI[] inventoryPanelCount;
     [SerializeField] TextMeshProUGUI[] btnsCount;
     [SerializeField] Image[] btnsImage;
     ItemScript[] itemScripts;
     int btnNumber = 0;
-    public void AddItemToQuickAccess(UnityAction unityAction, ItemScript itemScript)
+    public void AddItemToQuickAccess(UnityAction unityAction, UnityAction inventoryPanelUnityAction, ItemScript itemScript)
     {
         if(HasItem(itemScript.name))
         {
@@ -43,6 +44,9 @@ public class QuickAccessScript : MonoBehaviour
         inventoryPanelCount[btnNumber].text = itemScript.count.ToString();
         itemScripts[btnNumber] = itemScript;
         btns[btnNumber].onClick.AddListener(unityAction);
+        inventoryPanelBtns[btnNumber].onClick.AddListener(inventoryPanelUnityAction);
+        int num = btnNumber;
+        inventoryPanelBtns[btnNumber].onClick.AddListener(delegate { ClearPanelSlot(num); });
     }
     public void UpdatePanel()
     {
@@ -86,6 +90,7 @@ public class QuickAccessScript : MonoBehaviour
         inventoryPanelCount[number].text = "";
         itemScripts[number] = null;
         btns[number].onClick.RemoveAllListeners();
+        inventoryPanelBtns[number].onClick.RemoveAllListeners();
     }
     void ChangeCounter(int number)
     {
