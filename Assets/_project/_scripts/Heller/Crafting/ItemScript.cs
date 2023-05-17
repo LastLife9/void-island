@@ -11,11 +11,7 @@ public class ItemScript
     public string name;
     public Sprite icon;
     public int count;
-    //public Dictionary<string, int> stats = new Dictionary<string, int>();
-    //void Start()
-    //{
-    //    onItemUseCallback += UpdateItem;    // Subscribe to the onItemUse callback
-    //}
+    //asd
     #region Contructors
     public ItemScript(Item item)
     {
