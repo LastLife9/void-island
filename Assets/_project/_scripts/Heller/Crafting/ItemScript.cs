@@ -11,6 +11,7 @@ public class ItemScript
     public string name;
     public Sprite icon;
     public int count;
+    //asd
     #region Contructors
     public ItemScript(Item item)
     {
